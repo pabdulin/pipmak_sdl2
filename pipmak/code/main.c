@@ -366,7 +366,6 @@ int main(int argc, char *argv[]) {
 	Uint8 utf8char[4];
 	CNode *n;
 	MouseModeToken shiftMouseModeToken = NULL;
-	const SDL_VideoInfo *videoinfo;   /* to get videoinfo and current desktop size */
 	
 	p = directoryFromPath(argv[0]);
 	if (p != NULL) {
@@ -382,10 +381,18 @@ int main(int argc, char *argv[]) {
 		errorMessage("Could not initialize SDL: %s", SDL_GetError());
 		quit(1);
 	}
+	
+	// TODO(pabdulin): check fix#1 SDL_GetVideoInfo
 	/* Store current desktop size - must be done before calling SDL_SetVideoMode */
-	videoinfo =  SDL_GetVideoInfo();
-	desktopsize.w = videoinfo->current_w;
-	desktopsize.h = videoinfo->current_h;
+	// const SDL_VideoInfo *videoinfo;   /* to get videoinfo and current desktop size */
+	// videoinfo =  SDL_GetVideoInfo();
+	// desktopsize.w = videoinfo->current_w;
+	// desktopsize.h = videoinfo->current_h;
+	// see: https://wiki.libsdl.org/SDL2/SDL_GetDesktopDisplayMode
+	SDL_DisplayMode videoinfo;
+	SDL_GetDesktopDisplayMode(0, &videoinfo);
+	desktopsize.w = videoinfo.w;
+	desktopsize.h = videoinfo.h;
 
 	SDL_EnableUNICODE(SDL_ENABLE);
 	
