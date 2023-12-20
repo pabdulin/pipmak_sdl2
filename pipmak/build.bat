@@ -12,7 +12,7 @@ SET LinkerPaths=/LIBPATH:..\lib
 SET LinkerFiles=lua503.lib %LibsSDL% OpenAL32.lib %LibsXiph% %LibsWin%
 
 SET CompilerWarns=
-SET CompilerDefines=/D"DEBUG" /D"WIN32" /D"_USE_MATH_DEFINES"
+SET CompilerDefines=/D"DEBUG" /D"WIN32"
 SET IncludeSDL1=/I..\include\SDL /I..\include\SDL_image /I..\include\SDL_ttf
 SET IncludeSDL2=/I..\include\SDL2 /I..\include\SDL2_image /I..\include\SDL2_ttf
 SET IncludeSDL=%IncludeSDL2%
