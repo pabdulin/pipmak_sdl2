@@ -243,10 +243,10 @@ static int loadsoundLua(lua_State *L) {
 		if (sound->mutex == NULL) luaL_error(L, "out of memory");
 		sound->cond = SDL_CreateCond();
 		if (sound->cond == NULL) luaL_error(L, "out of memory");
-		sound->loaderThread = SDL_CreateThread(streamingLoader, sound);
+		sound->loaderThread = SDL_CreateThread(streamingLoader, "streamingLoader", sound);
 	}
 	else {
-		sound->loaderThread = SDL_CreateThread(staticLoader, sound);
+		sound->loaderThread = SDL_CreateThread(staticLoader, "staticLoader", sound);
 	}
 	
 	return 1;
