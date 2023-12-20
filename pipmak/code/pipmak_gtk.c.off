@@ -1,0 +1,233 @@
+/*
+ 
+ pipmak_gtk.c, part of the Pipmak Game Engine
+ Copyright (c) 2006 Christian Walther
+ 
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ 
+ */
+
+/* $Id: pipmak_gtk.c 195 2008-05-12 11:21:49Z cwalther $ */
+
+#include "platform.h"
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include "physfs.h"
+#include "SDL.h"
+#include "terminal.h"
+#include <gtk/gtk.h>
+
+extern int mouseX, mouseY;
+
+
+const char* lineEnding = "\n";
+
+static gboolean gtkAvailable = FALSE;
+
+void initGUI() {
+	gtkAvailable = gtk_init_check(NULL, NULL);
+}
+
+int prependResourcesToPhysfsSearchpath() {
+	if (PHYSFS_addToSearchPath("Pipmak Resources", 0)) return 1;
+	if (PHYSFS_addToSearchPath("../Pipmak Resources", 0)) return 1;
+	if (PHYSFS_addToSearchPath("../share/pipmak/resources", 0)) return 1;
+	if (PHYSFS_addToSearchPath("pipmak-resources", 0)) return 1;
+	return 0;
+}
+
+static gboolean quitGtkMain(gpointer data) {
+	gtk_main_quit();
+	return FALSE;
+}
+
+void errorMessage(const char *message, ...) {
+	if (gtkAvailable) {
+		GtkWidget *dialog;
+		char buffer[1024];
+		va_list ap;
+		va_start(ap, message);
+		vsnprintf(buffer, 1024, message, ap);
+		dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "%s", buffer);
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		/* for some reason, the dialog isn't closed without the following two lines */
+		g_timeout_add(0, quitGtkMain, NULL);
+		gtk_main();
+		va_end(ap);
+	}
+	else {
+		va_list ap;
+		va_start(ap, message);
+		vfprintf(stderr, message, ap);
+		fputc('\n', stderr);
+		va_end(ap);
+	}
+}
+
+char* saveGamePath() {
+	char *path = NULL;
+	GtkWidget *dialog;
+	GtkFileFilter *filter;
+	
+	if (gtkAvailable) {
+		dialog = gtk_file_chooser_dialog_new("Save Game As", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+		gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "Saved Game.pipsave");
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*.pipsave");
+		gtk_file_filter_set_name(filter, "Pipmak Saved Games");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*");
+		gtk_file_filter_set_name(filter, "All Files");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+			char *f = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+			path = malloc(strlen(f)+1);
+			if (path != NULL) strcpy(path, f);
+			g_free(f);
+		}
+		gtk_widget_destroy(dialog);
+		
+		/* for some reason, the dialog isn't closed without the following two lines */
+		g_timeout_add(0, quitGtkMain, NULL);
+		gtk_main();
+	}
+	
+	/* without this, on some Linux distributions, we end up in a weird half-grabbed state */
+	SDL_WarpMouse(mouseX, mouseY);
+	
+	return path;
+}
+
+char* newProjectPath() {
+	char *path = NULL;
+	GtkWidget *dialog;
+	GtkFileFilter *filter;
+	
+	if (gtkAvailable) {
+		dialog = gtk_file_chooser_dialog_new("New Project", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+		gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "untitled.pipmak");
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*.pipmak");
+		gtk_file_filter_set_name(filter, "Pipmak Projects");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*");
+		gtk_file_filter_set_name(filter, "All Files");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+			char *f = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+			path = malloc(strlen(f)+1);
+			if (path != NULL) strcpy(path, f);
+			g_free(f);
+		}
+		gtk_widget_destroy(dialog);
+		
+		/* for some reason, the dialog isn't closed without the following two lines */
+		g_timeout_add(0, quitGtkMain, NULL);
+		gtk_main();
+	}
+	
+	/* without this, on some Linux distributions, we end up in a weird half-grabbed state */
+	SDL_WarpMouse(mouseX, mouseY);
+	
+	return path;
+}
+
+char* openSavedGamePath() {
+	char *path = NULL;
+	GtkWidget *dialog;
+	GtkFileFilter *filter;
+	
+	if (gtkAvailable) {
+		dialog = gtk_file_chooser_dialog_new("Open Saved Game", NULL, GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+		gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*.pipsave");
+		gtk_file_filter_set_name(filter, "Pipmak Saved Games");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*");
+		gtk_file_filter_set_name(filter, "All Files");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+			char *f = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+			path = malloc(strlen(f)+1);
+			if (path != NULL) strcpy(path, f);
+			g_free(f);
+		}
+		gtk_widget_destroy(dialog);
+		
+		/* for some reason, the dialog isn't closed without the following two lines */
+		g_timeout_add(0, quitGtkMain, NULL);
+		gtk_main();
+	}
+	
+	/* without this, on some Linux distributions, we end up in a weird half-grabbed state */
+	SDL_WarpMouse(mouseX, mouseY);
+	
+	return path;
+}
+
+char* openProjectPath() {
+	char *path = NULL;
+	GtkWidget *dialog;
+	GtkFileFilter *filter;
+	
+	if (gtkAvailable) {
+		dialog = gtk_file_chooser_dialog_new("Open a project or its main.lua", NULL, GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+		gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*.pipmak");
+		gtk_file_filter_add_pattern(filter, "main.lua");
+		gtk_file_filter_set_name(filter, "Pipmak Projects");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		filter = gtk_file_filter_new();
+		gtk_file_filter_add_pattern(filter, "*");
+		gtk_file_filter_set_name(filter, "All Files");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+		if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+			char *f = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+			path = malloc(strlen(f)+1);
+			if (path != NULL) strcpy(path, f);
+			g_free(f);
+		}
+		gtk_widget_destroy(dialog);
+		
+		/* for some reason, the dialog isn't closed without the following two lines */
+		g_timeout_add(0, quitGtkMain, NULL);
+		gtk_main();
+	}
+	
+	/* without this, on some Linux distributions, we end up in a weird half-grabbed state */
+	SDL_WarpMouse(mouseX, mouseY);
+	
+	return path;
+}
+
+void openFile(const char *project, const char *path) {
+	/* this quick-and-dirty solution will probably earn me the hate of all non-Gnome-users - desktop-independent replacements are welcome */
+	char command[512];
+	int status;
+	snprintf(command, 512, "gnome-open \"%s/%s\"", project, path);
+	status = system(command);
+	if (status != 0) {
+		terminalPrintf("Error running %s: %d", command, status);
+	}
+}

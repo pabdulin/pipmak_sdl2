@@ -1,0 +1,123 @@
+/*
+ 
+ pipmak_dummyplatform.c, part of the Pipmak Game Engine
+ Copyright (c) 2004-2006 Christian Walther
+ 
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ 
+ */
+
+/* $Id: pipmak_dummyplatform.c 72 2006-03-28 12:31:57Z cwalther $ */
+
+#include "platform.h"
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include "physfs.h"
+#include "SDL.h"
+#include "terminal.h"
+
+
+/*
+ * This function is called early in Pipmak's startup process. Do any
+ * initialization that is required for the other functions in this file
+ * here.
+ */
+
+void initGUI() {
+}
+
+/*
+ * This function should prepend the path to the Pipmak resources folder or
+ * archive (containing the 'resources' folder and the internal nodes 0, -1
+ * etc.) to the PhysicsFS search path and return 0 on failure or nonzero on
+ * success.
+ */
+
+int prependResourcesToPhysfsSearchpath() {
+	return PHYSFS_addToSearchPath("pipmak-resources", 0);
+}
+
+/*
+ * This function should take printf-style arguments and display them in an
+ * error message dialog box. This is used for errors occurring before the
+ * Pipmak terminal can be used. You may limit the message length to 1024
+ * chars.
+ */
+
+void errorMessage(const char *message, ...) {
+	va_list ap;
+	va_start(ap, message);
+	vfprintf(stderr, message, ap);
+	fputc('\n', stderr);
+	va_end(ap);
+}
+
+/*
+ * This function should present a save dialog for saving a saved game and
+ * return the result (a path ready to be fopened) in a malloced buffer, or
+ * NULL in case of error or user abort.
+ */
+
+char* saveGamePath() {
+	char *path;
+	const char *t = "SavedGame.pipsave";
+	path = malloc(strlen(t)+1);
+	if (path != NULL) strcpy(path, t);
+	return path;
+}
+
+/*
+ * This function should present an open dialog for opening a saved game and
+ * return the result (a path ready to be fopened) in a malloced buffer, or
+ * NULL in case of error or user abort.
+ */
+
+char* openSavedGamePath() {
+	char *path;
+	const char *t = "SavedGame.pipsave";
+	path = malloc(strlen(t)+1);
+	if (path != NULL) strcpy(path, t);
+	return path;
+}
+
+/*
+ * This function should present an open dialog for opening a project and
+ * return the result (the platform specific path to the project package
+ * (folder) or file or to its main.lua) in a malloced buffer, or NULL in case
+ * of error or user abort.
+ */
+
+char* openProjectPath() {
+	char *path;
+	const char *t = "Project.pipmak";
+	path = malloc(strlen(t)+1);
+	if (path != NULL) strcpy(path, t);
+	return path;
+}
+
+/*
+ * This function should open the specified file in the user's preferred editor
+ * for it, just as if it had been double-clicked in the file manager.
+ * <project> is the path to the project in platform-dependent format, <path>
+ * is the path of the file relative to the project in unified format ("/" as
+ * directory separator). On Unix-likes, you can just glue them together with
+ * another "/" in between to get the full path.
+ * If the file can't be opened, print an error message to the Pipmak terminal.
+ */
+
+void openFile(const char *project, const char *path) {
+	terminalPrintf("Opening files is not implemented on this platform.");
+}

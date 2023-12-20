@@ -1,0 +1,1 @@
+#define PIPMAK_VERSION 0.27

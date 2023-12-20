@@ -1,0 +1,6 @@
+root = true
+
+## For standard properties, see: https://editorconfig.org/
+## For Guidelines, see: https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview
+[*]
+guidelines = 80 1px dotted green, 120 1px dotted gray, 160 1px dotted red
