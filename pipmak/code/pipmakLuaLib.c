@@ -529,7 +529,7 @@ static int getimageLua(lua_State *L) { /*serves as both pipmak.getimage and pipm
 		image->datarefcount = 0;
 		image->data = NULL;
 		image->drawingColor.r = image->drawingColor.g = image->drawingColor.b = 0;
-		image->drawingColor.unused = 255; /*used as alpha here*/
+		image->drawingColor.a = 255; /*used as alpha here*/
 		
 		image->prev = NULL;
 		image->next = imageListStart;
@@ -604,7 +604,7 @@ static int newimageLua(lua_State *L) {
 	image->data = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, BYTEORDER_DEPENDENT_RGBA_MASKS);
 	image->datasize = image->data->h*image->data->pitch;
 	image->drawingColor.r = image->drawingColor.g = image->drawingColor.b = 0;
-	image->drawingColor.unused = 255; /*used as alpha here*/
+	image->drawingColor.a = 255; /*used as alpha here*/
 	
 	if (srcimg != NULL) {
 		getImageData(srcimg, 1);
@@ -1303,7 +1303,7 @@ static int imageColorLua(lua_State *L) {
 		m->drawingColor.r = (Uint8)floor(255*luaL_checknumber(L, 2) + 0.5);
 		m->drawingColor.g = (Uint8)floor(255*luaL_checknumber(L, 3) + 0.5);
 		m->drawingColor.b = (Uint8)floor(255*luaL_checknumber(L, 4) + 0.5);
-		m->drawingColor.unused = (Uint8)floor(255*luaL_optnumber(L, 5, 1.0) + 0.5);
+		m->drawingColor.a = (Uint8)floor(255*luaL_optnumber(L, 5, 1.0) + 0.5);
 		lua_settop(L, 1);
 		return 1;
 	}
@@ -1311,7 +1311,7 @@ static int imageColorLua(lua_State *L) {
 		lua_pushnumber(L, m->drawingColor.r*(1.0/255));
 		lua_pushnumber(L, m->drawingColor.g*(1.0/255));
 		lua_pushnumber(L, m->drawingColor.b*(1.0/255));
-		lua_pushnumber(L, m->drawingColor.unused*(1.0/255));
+		lua_pushnumber(L, m->drawingColor.a*(1.0/255));
 		return 4;
 	}
 }
@@ -1337,7 +1337,7 @@ static int imageFillLua(lua_State *L) {
 		rect.h = m->h;
 	}
 	getImageData(m, 1);
-	SDL_FillRect(m->data, &rect, SDL_MapRGBA(m->data->format, m->drawingColor.r, m->drawingColor.g, m->drawingColor.b, m->drawingColor.unused));
+	SDL_FillRect(m->data, &rect, SDL_MapRGBA(m->data->format, m->drawingColor.r, m->drawingColor.g, m->drawingColor.b, m->drawingColor.a));
 	
 	if (m->textureID != 0) {
 		glBindTexture(glTextureTarget, m->textureID);
@@ -1453,7 +1453,7 @@ static int imageDrawtextLua(lua_State *L) {
 				}
 				for (; srccol < textsurf->w && dstcol < m->data->w; srccol++, dstcol++) {
 					dst = (Uint8*)m->data->pixels + dstrow*m->data->pitch + dstcol*m->bpp/8;
-					ta = ((int)*((Uint8*)textsurf->pixels + srcrow*textsurf->pitch + srccol) * m->drawingColor.unused + 127)/255;
+					ta = ((int)*((Uint8*)textsurf->pixels + srcrow*textsurf->pitch + srccol) * m->drawingColor.a + 127)/255;
 					if (m->bpp == 32) {
 						ba = *(dst + 3);
 						a = 255*(ta + ba) - ta*ba;
