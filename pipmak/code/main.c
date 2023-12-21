@@ -63,6 +63,7 @@ CNode *touchedNode;
 GLfloat azimuth, elevation, minaz, maxaz, minel, maxel;
 GLfloat verticalFOV;
 // SDL_Surface *screen;
+SDL_Rect *screen;
 SDL_Window *sdl2Window;
 CNode *backgroundCNode, *frontCNode, *thisCNode = NULL;
 lua_State *L = NULL;
@@ -95,11 +96,6 @@ void redrawGL(float fade) {
 	CNode *node;
 	Uint32 ticks = SDL_GetTicks();
 	
-	// TODO(pabdulin): fix#3
-	SDL_Rect screen_;
-	SDL_GetWindowSize(sdl2Window, &screen_.w, &screen_.h);
-	SDL_Rect *screen = &screen_;
-
 	if (fade < 1) {
 		float f, g, s;
 		if (glTextureTarget == GL_TEXTURE_RECTANGLE_NV) {
@@ -431,6 +427,12 @@ int main(int argc, char *argv[]) {
 		errorMessage("Could not set window: %s", SDL_GetError());
 		quit(1);
 	}
+	// TODO(pabdulin): fix#3
+	SDL_Rect screen_;
+	SDL_GetWindowSize(sdl2Window, &screen_.w, &screen_.h);
+	screen = &screen_;
+
+
 	// followed by 
 	SDL_GL_CreateContext(sdl2Window);
 	
