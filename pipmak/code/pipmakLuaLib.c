@@ -895,7 +895,6 @@ static int setfullscreenLua(lua_State *L) {
 
 		// TODO(pabdulin): check
 		Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
-		SDL_Rect *screen = &screenSize;
 		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen_flags & SDL_WINDOW_FULLSCREEN) == 0) {
 			terminalClear();
 			cleanupGL();
