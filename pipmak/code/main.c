@@ -399,7 +399,9 @@ int main(int argc, char *argv[]) {
 	desktopsize.w = videoinfo.w;
 	desktopsize.h = videoinfo.h;
 
-	SDL_EnableUNICODE(SDL_ENABLE);
+	// TODO(pabdulin): Fix#5 SDL_EnableUNICODE, see: https://wiki.libsdl.org/SDL2/MigrationGuide#input
+	// see: https://www.libsdl.org/release/SDL-1.2.15/docs/html/sdlkeysym.html
+	// SDL_EnableUNICODE(SDL_ENABLE);
 	
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	// #if ! SDL_VERSION_ATLEAST(1, 2, 10)
@@ -722,19 +724,19 @@ int main(int argc, char *argv[]) {
 							break;
 						default:
 							if (!textEditHandleKey(&event.key)) {
-								if (event.key.keysym.unicode < 0x0080) {
-									utf8char[0] = (event.key.keysym.unicode & 0x007F);
+								if (event.key.keysym.sym < 0x0080) {
+									utf8char[0] = (event.key.keysym.sym & 0x007F);
 									utf8char[1] = 0;
 								}
-								else if (event.key.keysym.unicode < 0x0800) {
-									utf8char[0] = 0xC0 | ((event.key.keysym.unicode & 0x07C0) >> 6);
-									utf8char[1] = 0x80 | (event.key.keysym.unicode & 0x003F);
+								else if (event.key.keysym.sym < 0x0800) {
+									utf8char[0] = 0xC0 | ((event.key.keysym.sym & 0x07C0) >> 6);
+									utf8char[1] = 0x80 | (event.key.keysym.sym & 0x003F);
 									utf8char[2] = 0;
 								}
 								else {
-									utf8char[0] = 0xE0 | ((event.key.keysym.unicode & 0xF000) >> 12);
-									utf8char[1] = 0x80 | ((event.key.keysym.unicode & 0x0FC0) >> 6);
-									utf8char[2] = 0x80 | (event.key.keysym.unicode & 0x003F);
+									utf8char[0] = 0xE0 | ((event.key.keysym.sym & 0xF000) >> 12);
+									utf8char[1] = 0x80 | ((event.key.keysym.sym & 0x0FC0) >> 6);
+									utf8char[2] = 0x80 | (event.key.keysym.sym & 0x003F);
 									utf8char[3] = 0;
 								}
 								n = frontCNode;

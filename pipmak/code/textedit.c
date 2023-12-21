@@ -200,7 +200,7 @@ int textEditHandleKey(SDL_KeyboardEvent *event) {
 	if (
 		focusedTextEditor->keydownFuncRef != 0
 		&& (
-			event->keysym.unicode == 0
+			event->keysym.sym == 0
 			|| event->keysym.sym == SDLK_RETURN
 			|| event->keysym.sym == SDLK_ESCAPE
 			|| event->keysym.sym == SDLK_TAB
@@ -292,7 +292,7 @@ int textEditHandleKey(SDL_KeyboardEvent *event) {
 			focusedTextEditor->selectionModified = 1;
 			break;
 		default:
-			if (event->keysym.unicode != 0 || event->keysym.sym == SDLK_BACKSPACE) {
+			if (event->keysym.sym != 0 || event->keysym.sym == SDLK_BACKSPACE) {
 				Uint16 *start, *end;
 				Uint8 *advstart, *advend;
 				if (focusedTextEditor->selectionAnchor > focusedTextEditor->selectionHead) {
@@ -336,7 +336,7 @@ int textEditHandleKey(SDL_KeyboardEvent *event) {
 						*(end+1) = *end;
 						*(advend+1) = *advend;
 					}
-					*start = event->keysym.unicode;
+					*start = event->keysym.sym;
 					
 					/*recalculate the advance width of the inserted char and (due to kerning) the following one*/
 					for (i = 0; i < 3; i++) {
