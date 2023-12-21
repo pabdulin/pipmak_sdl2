@@ -173,10 +173,11 @@ void textEditorDraw(TextEditor *te, Uint32 now) {
 static void focusTextEditor(TextEditor* te) {
 	focusedTextEditor = te;
 	if (te == NULL) {
-		SDL_EnableKeyRepeat(0, 0);
+		// TODO(pabdulin): Fix#9 SDL_EnableKeyRepeat, see: https://stackoverflow.com/questions/22156815/how-to-disable-key-repeat-in-sdl2
+		// SDL_EnableKeyRepeat(0, 0);
 	}
 	else {
-		SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+		// SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 	}
 }
 
