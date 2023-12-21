@@ -35,7 +35,7 @@
 
 
 extern GLfloat verticalFOV;
-extern SDL_Surface *screen;
+extern SDL_Rect screenSize;
 extern GLenum glTextureTarget;
 extern GLuint screenshotTextureIDs[2];
 extern Uint8 controlColorPalette[256][3];
@@ -47,6 +47,7 @@ extern enum TransitionState transitionState;
 
 
 void updateGLProjection() {
+	SDL_Rect *screen = &screenSize;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(verticalFOV, (GLdouble)screen->w/screen->h, 0.1, 1000);
@@ -103,6 +104,7 @@ void setupGL() {
 	for (i = 1; i < 256; i++) pixelMap[i] = 0.5f;
 	glPixelMapfv(GL_PIXEL_MAP_I_TO_A, 256, pixelMap);
 	
+	SDL_Rect *screen = &screenSize;
 	glViewport(0, 0, screen->w, screen->h);
 	updateGLProjection();
 	screenViewMatrix[0] = 2.0f/screen->w;
@@ -139,6 +141,7 @@ void cleanupGL() {
 void captureScreenGL(int i) {
 	int w, h;
 	CNode *node;
+	SDL_Rect *screen = &screenSize;
 	if (glTextureTarget == GL_TEXTURE_RECTANGLE_NV) {
 		w = screen->w;
 		h = screen->h;
