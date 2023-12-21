@@ -660,16 +660,38 @@ int main(int argc, char *argv[]) {
 						toolPop(TOOL_PAN);
 					}
 					break;
-				// Fix#4, SDL_PollEvent. see: https://stackoverflow.com/questions/19202867/sdl-activeevent-equivalent-in-sdl-2-0
-				case SDL_ACTIVEEVENT:
-					if (event.active.gain == 0 && (event.active.state & (SDL_APPINPUTFOCUS | SDL_APPACTIVE)) && !(screen_flags & SDL_WINDOW_FULLSCREEN)) {
-						SDL_WM_GrabInput(SDL_GRAB_OFF);
-					}
+				// TODO(pabdulin): fix#4, SDL_PollEvent. see: https://stackoverflow.com/questions/19202867/sdl-activeevent-equivalent-in-sdl-2-0
+				// ?? case SDL_WINDOWEVENT_FOCUS_GAINED:
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+					// if (event.active.gain == 0 && (event.active.state & (SDL_APPINPUTFOCUS | SDL_APPACTIVE)) && !(screen_flags & SDL_WINDOW_FULLSCREEN)) {
+					SDL_WM_GrabInput(SDL_GRAB_OFF);
+					// }
 					break;
-				case SDL_VIDEORESIZE:
+				// TODO(pabdulin): fix#4, see: https://wiki.libsdl.org/SDL2/MigrationGuide#summary-of-some-renamed-or-replaced-things
+				case SDL_WINDOWEVENT_RESIZED:
+					// SDL_Log("Window %d resized to %dx%d",
+					// 		event->window.windowID,
+					// 		event->window.data1,
+					// 		event->window.data2);
 					terminalClear();
 					cleanupGL();
-					screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, SDL_OPENGL | SDL_RESIZABLE);
+					
+					// TODO(pabdulin): note duplicate code for window creation
+					// screen = SDL_SetVideoMode(event.window.data1, event.window.data2, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+					sdl2Window = SDL_CreateWindow(
+						"pipmak SDL2", 
+						SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+						event.window.data1, event.window.data2,
+						SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+					if (sdl2Window == NULL) {
+						errorMessage("Could not resize window: %s", SDL_GetError());
+						quit(1);
+					}
+					// TODO(pabdulin): fix#3
+					SDL_Rect screen_;
+					SDL_GetWindowSize(sdl2Window, &screen_.w, &screen_.h);
+					screen = &screen_;
+
 					setupGL();
 					terminalPrintf("%d x %d\n", screen->w, screen->h);
 					break;
