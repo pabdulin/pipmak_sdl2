@@ -612,7 +612,9 @@ static int newimageLua(lua_State *L) {
 	
 	if (srcimg != NULL) {
 		getImageData(srcimg, 1);
-		SDL_SetAlpha(srcimg->data, 0, 255);
+		// TODO(pabdulin): fix#11 SDL_SetAlpha
+		SDL_SetSurfaceAlphaMod(srcimg->data, 255);
+		// SDL_SetAlpha(srcimg->data, 0, 255);
 		SDL_BlitSurface(srcimg->data, NULL, image->data, NULL);
 	}
 	
@@ -1573,7 +1575,9 @@ static int imageDrawimageLua(lua_State *L) {
 	
 	getImageData(m, 1);
 	getImageData(srcimg, 1);
-	SDL_SetAlpha(srcimg->data, 0, 255); /*copy instead of composite, because SDL can't do RGBA->RGBA blitting, and the RGBA->RGB blitting it does instead seems more confusing than useful*/
+	// TODO(pabdulin): fix#11 SDL_SetAlpha
+	SDL_SetSurfaceAlphaMod(srcimg->data, 255);
+	// SDL_SetAlpha(srcimg->data, 0, 255); /*copy instead of composite, because SDL can't do RGBA->RGBA blitting, and the RGBA->RGB blitting it does instead seems more confusing than useful*/
 	SDL_BlitSurface(srcimg->data, &srcrect, m->data, &dstrect);
 	
 	if (m->textureID != 0) {

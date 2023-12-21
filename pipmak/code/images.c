@@ -123,7 +123,10 @@ Uint8 *getImageData(Image *image, int inlua) {
 			// TODO(pabdulin): fix#10 SDL_SetColors, see: https://stackoverflow.com/questions/29609544/how-to-use-palettes-in-sdl-2
 			if (image->bpp == 8) //SDL_SetColors(datasurf, surf->format->palette->colors, 0, surf->format->palette->ncolors);
 				SDL_SetPaletteColors(datasurf->format->palette, surf->format->palette->colors, 0, surf->format->palette->ncolors);
-			SDL_SetAlpha(surf, 0, 255); /*ignore alpha when blitting, just copy it over*/
+			
+			// TODO(pabdulin): fix#11 SDL_SetAlpha
+			SDL_SetSurfaceAlphaMod(surf, 255);
+			// SDL_SetAlpha(surf, 0, 255); /*ignore alpha when blitting, just copy it over*/
 			SDL_BlitSurface(surf, NULL, datasurf, NULL);
 			SDL_FreeSurface(surf);
 		}

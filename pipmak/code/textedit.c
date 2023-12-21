@@ -103,7 +103,9 @@ void textEditorDraw(TextEditor *te, Uint32 now) {
 			}
 			else {
 				SDL_Rect rect = {1, 1, 0, 0}; /*keep a 1px transparent border around the text*/
-				SDL_SetAlpha(textsurf, 0, 255); /*ignore alpha when blitting, just copy it over*/
+				// TODO(pabdulin): fix#11 SDL_SetAlpha
+				SDL_SetSurfaceAlphaMod(textsurf, 255);
+				// SDL_SetAlpha(textsurf, 0, 255); /*ignore alpha when blitting, just copy it over*/
 				SDL_BlitSurface(textsurf, NULL, outsurf, &rect);
 				SDL_LockSurface(outsurf);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
