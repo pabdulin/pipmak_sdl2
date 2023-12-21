@@ -716,8 +716,9 @@ int main(int argc, char *argv[]) {
 							break;
 						case SDLK_LCTRL:
 						case SDLK_RCTRL:
-						case SDLK_LMETA:
-						case SDLK_RMETA:
+						// TODO(pabdulin): fix#4 see https://forums.libsdl.org/viewtopic.php?t=9386
+						case SDLK_LGUI:
+						case SDLK_RGUI:
 							break;
 						default:
 							if (!textEditHandleKey(&event.key)) {
