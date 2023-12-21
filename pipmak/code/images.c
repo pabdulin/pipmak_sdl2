@@ -119,7 +119,10 @@ Uint8 *getImageData(Image *image, int inlua) {
 				else terminalPrintf("Pipmak internal error: Could not create RGB surface: %s", SDL_GetError());
 				return NULL;
 			}
-			if (image->bpp == 8) SDL_SetColors(datasurf, surf->format->palette->colors, 0, surf->format->palette->ncolors);
+
+			// TODO(pabdulin): fix#10 SDL_SetColors, see: https://stackoverflow.com/questions/29609544/how-to-use-palettes-in-sdl-2
+			if (image->bpp == 8) //SDL_SetColors(datasurf, surf->format->palette->colors, 0, surf->format->palette->ncolors);
+				SDL_SetPaletteColors(datasurf->format->palette, surf->format->palette->colors, 0, surf->format->palette->ncolors);
 			SDL_SetAlpha(surf, 0, 255); /*ignore alpha when blitting, just copy it over*/
 			SDL_BlitSurface(surf, NULL, datasurf, NULL);
 			SDL_FreeSurface(surf);
