@@ -778,7 +778,7 @@ static int screensizeLua(lua_State *L) {
 static int setwindowedLua(lua_State *L) {
 	terminalClear();
 	cleanupGL();
-	screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	screen = SDL_CreateWindow(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	setupGL();
 	if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
 		mouseX = screen->w/2;
@@ -817,7 +817,7 @@ static int getscreenmodesLua(lua_State *L) {
 }
 
 static int desktopsizeLua(lua_State *L) {
-	/* return desktop size stored in main.c before calling 0 = 0; SDL_SetVideoMode() */
+	/* return desktop size stored in main.c before calling SDL_CreateWindow() */
 	lua_pushnumber(L, desktopsize.w);
 	lua_pushnumber(L, desktopsize.h);
 	return 2;
@@ -880,10 +880,10 @@ static int setfullscreenLua(lua_State *L) {
 		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen->flags & SDL_WINDOW_FULLSCREEN) == 0) {
 			terminalClear();
 			cleanupGL();
-			screen = 0 = 0; SDL_SetVideoMode(modes[i]->w, modes[i]->h, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+			screen = SDL_CreateWindow(modes[i]->w, modes[i]->h, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 			if (screen == NULL) {
 				terminalPrintf("Error switching to full screen: %s", SDL_GetError());
-				screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+				screen = SDL_CreateWindow(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 			}
 			setupGL();
 			SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -960,7 +960,7 @@ static int savegameLua(lua_State *L) {
 	if (videoflags & SDL_WINDOW_FULLSCREEN) {
 		terminalClear();
 		cleanupGL();
-		screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+		screen = SDL_CreateWindow(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	}
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
@@ -1056,7 +1056,7 @@ static int savegameLua(lua_State *L) {
 	SDL_ShowCursor(SDL_DISABLE);
 	popMouseMode(token);
 	if (videoflags & SDL_WINDOW_FULLSCREEN) {
-		screen = 0 = 0; SDL_SetVideoMode(w, h, 0, videoflags);
+		screen = SDL_CreateWindow(w, h, 0, videoflags);
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 		setupGL();
 	}
