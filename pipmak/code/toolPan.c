@@ -46,14 +46,14 @@ extern Image *cursors[NUMBER_OF_CURSORS];
 
 static void selected(Tool *self) {
 	MY(cursorRotCos) = MY(cursorRotSin) = 0;
-	SDL_WarpMouse(mouseX, mouseY);
+	SDL_WarpMouseInWindow(sdl2Window, mouseX, mouseY);
 }
 
 static void deselected(Tool *self) {
 	if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
 		mouseX = screen->w/2;
 		mouseY = screen->h/2;
-		SDL_WarpMouse(mouseX, mouseY);
+		SDL_WarpMouseInWindow(sdl2Window, mouseX, mouseY);
 		SDL_GetRelativeMouseState(NULL, NULL);
 	}
 }

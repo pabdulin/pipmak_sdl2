@@ -255,7 +255,7 @@ static void handleMouseModeChange(enum MouseMode oldMode, enum MouseMode newMode
 			mouseWarpEndTime = thisRedrawTime + MOUSE_WARP_DURATION;
 		}
 		else { /*newMode == MOUSE_MODE_JOYSTICK*/
-			SDL_WarpMouse(mouseX, mouseY);
+			SDL_WarpMouseInWindow(sdl2Window, mouseX, mouseY);
 		}
 	}
 }

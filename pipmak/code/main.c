@@ -624,7 +624,7 @@ int main(int argc, char *argv[]) {
 							|| (mouseY == 0 && event.motion.yrel < 0) || (mouseY == screen->h-1 && event.motion.yrel > 0)
 						) {
 							SDL_SetRelativeMouseMode(SDL_FALSE);
-							SDL_WarpMouse(mouseX, mouseY);
+							SDL_WarpMouseInWindow(sdl2Window, mouseX, mouseY);
 						}
 						/*regrab, with a slightly inset boundary to allow resizing of the window (at least on Mac OS X, the resizing handle is inside the window and thus can't be used while grabbed)*/
 						else if (SDL_GetRelativeMouseMode() == SDL_FALSE

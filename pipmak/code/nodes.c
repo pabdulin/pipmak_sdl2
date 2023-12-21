@@ -340,7 +340,7 @@ CNode *enterNode(CNode *prev, CNode *replaced) {
 		
 		if (prev == NULL && topMouseMode->mode == MOUSE_MODE_DIRECT) {
 			if (backgroundCNode->type & 1) {
-				SDL_WarpMouse(mouseX, mouseY);
+				SDL_WarpMouseInWindow(sdl2Window, mouseX, mouseY);
 			}
 			else { 
 				mouseWarpStartX = mouseX;
