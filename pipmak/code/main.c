@@ -612,11 +612,13 @@ int main(int argc, char *argv[]) {
 		touchedNode->tool->event(touchedNode->tool, (mouseButton != 0), touchedControl, frameDuration);
 		
 		/*Handle events*/
+		// TODO(pabdulin): Fix#3
+		Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
 		
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 				case SDL_MOUSEMOTION:
-					if (!(screen->flags & SDL_FULLSCREEN) && (SDL_GetAppState() & SDL_APPINPUTFOCUS)) {
+					if (!(screen_flags & SDL_WINDOW_FULLSCREEN) && (SDL_GetAppState() & SDL_APPINPUTFOCUS)) {
 						/*ungrab if the mouse runs against the window edge hard enough*/
 						if ((mouseX == 0 && event.motion.xrel < 0) || (mouseX == screen->w-1 && event.motion.xrel > 0)
 							|| (mouseY == 0 && event.motion.yrel < 0) || (mouseY == screen->h-1 && event.motion.yrel > 0)
@@ -659,7 +661,7 @@ int main(int argc, char *argv[]) {
 					}
 					break;
 				case SDL_ACTIVEEVENT:
-					if (event.active.gain == 0 && (event.active.state & (SDL_APPINPUTFOCUS | SDL_APPACTIVE)) && !(screen->flags & SDL_FULLSCREEN)) {
+					if (event.active.gain == 0 && (event.active.state & (SDL_APPINPUTFOCUS | SDL_APPACTIVE)) && !(screen_flags & SDL_WINDOW_FULLSCREEN)) {
 						SDL_WM_GrabInput(SDL_GRAB_OFF);
 					}
 					break;
