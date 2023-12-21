@@ -397,11 +397,14 @@ int main(int argc, char *argv[]) {
 	SDL_EnableUNICODE(SDL_ENABLE);
 	
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	#if ! SDL_VERSION_ATLEAST(1, 2, 10)
-		#define SDL_GL_SWAP_CONTROL 16
-	#endif
-	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-	
+	// #if ! SDL_VERSION_ATLEAST(1, 2, 10)
+	// 	#define SDL_GL_SWAP_CONTROL 16
+	// #endif
+	// SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+	// TODO(pabdulin): fix#2 SDL_GL_SWAP_CONTROL. See https://wiki.libsdl.org/SDL2/MigrationGuide#opengl
+	SDL_GL_SetSwapInterval(1);
+
+
 	screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
 	if (screen == NULL) {
 		errorMessage("Could not set video mode: %s", SDL_GetError());
