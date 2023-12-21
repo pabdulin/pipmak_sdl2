@@ -7,8 +7,7 @@
             ],
             "defines": [
                 "DEBUG",
-                "WIN32",
-                "_USE_MATH_DEFINES"
+                "WIN32"
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",
