@@ -9,7 +9,7 @@ SET LibsSDL=%LibsSDL2%
 SET LibsXiph=libogg.lib libvorbis.lib libvorbisfile.lib
 SET LibsWin=Shell32.lib User32.lib Advapi32.lib Comdlg32.lib OpenGL32.Lib GlU32.Lib
 SET LinkerPaths=/LIBPATH:..\lib
-SET LinkerFiles=lua503.lib %LibsSDL% OpenAL32.lib %LibsXiph% %LibsWin%
+SET LinkerFiles=legacy_stdio_definitions.lib lua503.lib %LibsSDL% OpenAL32.lib %LibsXiph% %LibsWin%
 
 SET CompilerWarns=
 SET CompilerDefines=/D"DEBUG" /D"WIN32"
