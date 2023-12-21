@@ -62,7 +62,8 @@ int touchedControl;
 CNode *touchedNode;
 GLfloat azimuth, elevation, minaz, maxaz, minel, maxel;
 GLfloat verticalFOV;
-SDL_Surface *screen;
+// SDL_Surface *screen;
+SDL_Window *sdl2Window;
 CNode *backgroundCNode, *frontCNode, *thisCNode = NULL;
 lua_State *L = NULL;
 GLint glTextureFilter = GL_LINEAR;
@@ -94,6 +95,11 @@ void redrawGL(float fade) {
 	CNode *node;
 	Uint32 ticks = SDL_GetTicks();
 	
+	// TODO(pabdulin): fix#3
+	SDL_Rect screen_;
+	SDL_GetWindowSize(sdl2Window, &screen_.w, &screen_.h);
+	SDL_Rect *screen = &screen_;
+
 	if (fade < 1) {
 		float f, g, s;
 		if (glTextureTarget == GL_TEXTURE_RECTANGLE_NV) {
@@ -350,7 +356,10 @@ void redrawGL(float fade) {
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	
-	SDL_GL_SwapBuffers();
+	// TODO(pabdulin): fix#3 SDL_SetVideoMode.
+	// See: https://wiki.libsdl.org/SDL2/MigrationGuide#opengl
+	// SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(sdl2Window);
 }
 
 int main(int argc, char *argv[]) {
@@ -404,12 +413,26 @@ int main(int argc, char *argv[]) {
 	// TODO(pabdulin): fix#2 SDL_GL_SWAP_CONTROL. See https://wiki.libsdl.org/SDL2/MigrationGuide#opengl
 	SDL_GL_SetSwapInterval(1);
 
-
-	screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
-	if (screen == NULL) {
-		errorMessage("Could not set video mode: %s", SDL_GetError());
+	// TODO(pabdulin): fix#3 SDL_SetVideoMode.
+	// See: https://wiki.libsdl.org/SDL2/MigrationGuide#video
+	// See: https://wiki.libsdl.org/SDL2/MigrationGuide#opengl
+	// screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
+	// if (screen == NULL) {
+	// 	errorMessage("Could not set video mode: %s", SDL_GetError());
+	// 	quit(1);
+	// }
+	// call to 
+	sdl2Window = SDL_CreateWindow(
+		"pipmak SDL2", 
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		640, 480,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	if (sdl2Window == NULL) {
+		errorMessage("Could not set window: %s", SDL_GetError());
 		quit(1);
 	}
+	// followed by 
+	SDL_GL_CreateContext(sdl2Window);
 	
 	PHYSFS_init(argv[0]);
 	if (!prependResourcesToPhysfsSearchpath()) {
@@ -504,6 +527,7 @@ int main(int argc, char *argv[]) {
 		switch (disruptiveInstruction) {
 			case INSTR_OPENSAVEDGAME: {
 				/*Lua function has already switched to windowed*/
+				// TODO(pabdulin): fix#3, see: https://wiki.libsdl.org/SDL2/MigrationGuide#input
 				SDL_WM_GrabInput(SDL_GRAB_OFF);
 				SDL_ShowCursor(SDL_ENABLE);
 				p = openSavedGamePath();
