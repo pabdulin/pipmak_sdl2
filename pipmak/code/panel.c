@@ -35,13 +35,16 @@
 extern lua_State *L;
 extern GLenum glTextureTarget;
 extern Uint8 controlColorPalette[256][3];
-extern SDL_Surface *screen;
+extern SDL_Window *sdl2Window;
+extern SDL_Rect screenSize;
 extern int showControls;
 extern GLfloat screenViewMatrix[16];
 extern Uint32 thisRedrawTime;
 
 
 static void updatePosition(CNode *node, Uint32 duration) {
+	SDL_Rect *screen = &screenSize;
+
 	lua_Number r, a;
 	lua_rawgeti(L, LUA_REGISTRYINDEX, node->noderef);
 	lua_pushliteral(L, "relx"); lua_rawget(L, -2); r = lua_tonumber(L, -1); lua_pop(L, 1);

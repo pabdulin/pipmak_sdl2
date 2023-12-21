@@ -47,6 +47,7 @@ extern int touchedControl;
 extern int showControls;
 extern Uint32 thisRedrawTime, mouseWarpEndTime;
 extern struct MouseModeStackEntry *topMouseMode;
+extern SDL_Window *sdl2Window;
 
 static CNode *autofreedCNodes = NULL;
 

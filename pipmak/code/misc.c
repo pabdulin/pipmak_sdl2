@@ -43,7 +43,8 @@ extern int mouseX, mouseY, mouseWarpStartX, mouseWarpStartY;
 extern Uint32 thisRedrawTime, mouseWarpEndTime;
 extern GLfloat azimuth, elevation;
 extern GLfloat verticalFOV;
-extern SDL_Surface *screen;
+extern SDL_Window *sdl2Window;
+extern SDL_Rect screenSize;
 extern CNode *backgroundCNode, *thisCNode;
 
 
@@ -370,6 +371,7 @@ void absolutizePath(lua_State *L, int relativeToParent) {
 }
 
 void xYtoAzEl(int x, int y, float *az, float *el) {
+	SDL_Rect *screen = &screenSize;
 	x -= screen->w/2;
 	y -= screen->h/2;
 	if (x == 0 && y == 0) {

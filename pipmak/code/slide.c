@@ -35,7 +35,8 @@ extern lua_State *L;
 extern GLint glTextureFilter;
 extern GLenum glTextureTarget;
 extern Uint8 controlColorPalette[256][3];
-extern SDL_Surface *screen;
+extern SDL_Window *sdl2Window;
+extern SDL_Rect screenSize;
 extern int showControls;
 extern Uint32 thisRedrawTime;
 
@@ -60,6 +61,7 @@ static void feedToGL(CNode *node) {
 	Image *img;
 	int i, border;
 	float r;
+	SDL_Rect *screen = &screenSize;
 	
 	for (i = 0; i < 16; i++) node->private.slide.viewMatrix[i] = 0;
 	node->private.slide.viewMatrix[10] = 0.001f;
@@ -312,6 +314,7 @@ static void updateInterpolation(CNode *node) {
 }
 
 static void mouseXYtoHV(CNode *node, int x, int y, float *h, float *v) {
+	SDL_Rect *screen = &screenSize;
 	if (screen->w*node->height > screen->h*node->width) {
 		*h = (x - (float)screen->w/2)*node->height/screen->h + (float)node->width/2;
 		*v = (float)(y*node->height/screen->h);

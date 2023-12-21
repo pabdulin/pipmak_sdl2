@@ -37,7 +37,8 @@ extern int mouseButton;
 extern GLenum glTextureTarget;
 extern float joystickSpeed;
 extern GLfloat azimuth, elevation, minaz, maxaz, minel, maxel;
-extern SDL_Surface *screen;
+extern SDL_Window *sdl2Window;
+extern SDL_Rect screenSize;
 extern struct MouseModeStackEntry *topMouseMode;
 extern Image *cursors[NUMBER_OF_CURSORS];
 
@@ -50,6 +51,7 @@ static void selected(Tool *self) {
 }
 
 static void deselected(Tool *self) {
+	SDL_Rect *screen = &screenSize;
 	if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
 		mouseX = screen->w/2;
 		mouseY = screen->h/2;
