@@ -172,7 +172,8 @@ int openProject(const char *filename) {
 		lua_pushliteral(L, "title");
 		lua_rawget(L, -2);
 		title = lua_tostring(L, -1);
-		SDL_WM_SetCaption(title, title);
+		// TODO(pabdulin): check
+		// SDL_WM_SetCaption(title, title);
 		lua_pop(L, 1);
 		
 		lua_pushliteral(L, "onopenproject");
