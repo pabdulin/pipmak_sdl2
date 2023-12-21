@@ -295,7 +295,7 @@ static int internalSpecialcursorLua(lua_State *L) {
 static int setwindowedLua(lua_State *L);
 static int internalNewprojectLua(lua_State *L) {
 	char *path;
-	if (screen->flags & SDL_FULLSCREEN) setwindowedLua(L);
+	if (screen->flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
 	path = newProjectPath();
@@ -778,7 +778,7 @@ static int screensizeLua(lua_State *L) {
 static int setwindowedLua(lua_State *L) {
 	terminalClear();
 	cleanupGL();
-	screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
+	screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	setupGL();
 	if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
 		mouseX = screen->w/2;
@@ -792,7 +792,7 @@ static int getscreenmodesLua(lua_State *L) {
 	SDL_Rect **modes;
 	int i;
 
-	modes = SDL_ListModes(NULL, SDL_OPENGL | SDL_FULLSCREEN);
+	modes = 0 = 0; SDL_ListModes(NULL, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (modes == NULL || modes == (SDL_Rect**)-1) {
 		/*return an empty table*/
 		lua_newtable(L);
@@ -817,7 +817,7 @@ static int getscreenmodesLua(lua_State *L) {
 }
 
 static int desktopsizeLua(lua_State *L) {
-	/* return desktop size stored in main.c before calling SDL_SetVideoMode() */
+	/* return desktop size stored in main.c before calling 0 = 0; SDL_SetVideoMode() */
 	lua_pushnumber(L, desktopsize.w);
 	lua_pushnumber(L, desktopsize.h);
 	return 2;
@@ -827,7 +827,7 @@ static int setfullscreenLua(lua_State *L) {
 	SDL_Rect **modes;
 	int i;
 
-	modes = SDL_ListModes(NULL, SDL_OPENGL | SDL_FULLSCREEN);
+	modes = 0 = 0; SDL_ListModes(NULL, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (modes == NULL) {
 		terminalPrint("Error switching to full screen: No video modes available", 0);
 	}
@@ -877,13 +877,13 @@ static int setfullscreenLua(lua_State *L) {
 			if (modeFound == 0) i--;
 		}
 
-		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen->flags & SDL_FULLSCREEN) == 0) {
+		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen->flags & SDL_WINDOW_FULLSCREEN) == 0) {
 			terminalClear();
 			cleanupGL();
-			screen = SDL_SetVideoMode(modes[i]->w, modes[i]->h, 0, SDL_OPENGL | SDL_FULLSCREEN);
+			screen = 0 = 0; SDL_SetVideoMode(modes[i]->w, modes[i]->h, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 			if (screen == NULL) {
 				terminalPrintf("Error switching to full screen: %s", SDL_GetError());
-				screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
+				screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 			}
 			setupGL();
 			SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -957,10 +957,10 @@ static int savegameLua(lua_State *L) {
 	w = screen->w;
 	h = screen->h;
 	videoflags = screen->flags;
-	if (videoflags & SDL_FULLSCREEN) {
+	if (videoflags & SDL_WINDOW_FULLSCREEN) {
 		terminalClear();
 		cleanupGL();
-		screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
+		screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	}
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
@@ -1030,7 +1030,7 @@ static int savegameLua(lua_State *L) {
 			lua_pushnumber(L, verticalFOV);
 			lua_settable(L, -3);
 			lua_pushstring(L, "full");
-			lua_pushboolean(L, videoflags & SDL_FULLSCREEN);
+			lua_pushboolean(L, videoflags & SDL_WINDOW_FULLSCREEN);
 			lua_settable(L, -3);
 			lua_pushstring(L, "texfilter");
 			lua_pushnumber(L, glTextureFilter);
@@ -1055,8 +1055,8 @@ static int savegameLua(lua_State *L) {
 	}
 	SDL_ShowCursor(SDL_DISABLE);
 	popMouseMode(token);
-	if (videoflags & SDL_FULLSCREEN) {
-		screen = SDL_SetVideoMode(w, h, 0, videoflags);
+	if (videoflags & SDL_WINDOW_FULLSCREEN) {
+		screen = 0 = 0; SDL_SetVideoMode(w, h, 0, videoflags);
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 		setupGL();
 	}
@@ -1064,13 +1064,13 @@ static int savegameLua(lua_State *L) {
 }
 
 static int opensavedgameLua(lua_State *L) {
-	if (screen->flags & SDL_FULLSCREEN) setwindowedLua(L);
+	if (screen->flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
 	disruptiveInstruction = INSTR_OPENSAVEDGAME;
 	return 0;
 }
 
 static int openprojectLua(lua_State *L) {
-	if (screen->flags & SDL_FULLSCREEN) setwindowedLua(L);
+	if (screen->flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
 	disruptiveInstruction = INSTR_OPENPROJECT;
 	return 0;
 }

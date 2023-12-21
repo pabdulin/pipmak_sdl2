@@ -312,23 +312,23 @@ int openSavedGame(const char *filename) {
 				lua_pushliteral(L, "h"); lua_rawget(L, -2); h = (int)lua_tonumber(L, -1); lua_pop(L, 1);
 				lua_pushliteral(L, "fov"); lua_rawget(L, -2); if (lua_isnumber(L, -1)) verticalFOV = (GLfloat)lua_tonumber(L, -1); lua_pop(L, 1);
 				
-				videoflags = SDL_OPENGL;
+				videoflags = SDL_WINDOW_OPENGL;
 				lua_pushliteral(L, "full");
 				lua_rawget(L, -2);
-				if (lua_toboolean(L, -1)) videoflags |= SDL_FULLSCREEN;
-				else videoflags |= SDL_RESIZABLE;
+				if (lua_toboolean(L, -1)) videoflags |= SDL_WINDOW_FULLSCREEN;
+				else videoflags |= SDL_WINDOW_RESIZABLE;
 				lua_pop(L, 1);
 				
 				lua_pushliteral(L, "texfilter"); lua_rawget(L, -2); glTextureFilter = (GLint)lua_tonumber(L, -1); lua_pop(L, 1);
 				
 				terminalClear();
 				cleanupGL();
-				screen = SDL_SetVideoMode(w, h, 0, videoflags);
+				screen = 0 = 0; SDL_SetVideoMode(w, h, 0, videoflags);
 				if (screen == NULL) {
-					screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
+					screen = 0 = 0; SDL_SetVideoMode(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 					terminalPrintf("Error switching to full screen: %s", SDL_GetError());
 				}
-				if (screen->flags & SDL_FULLSCREEN) SDL_SetRelativeMouseMode(SDL_TRUE);
+				if (screen->flags & SDL_WINDOW_FULLSCREEN) SDL_SetRelativeMouseMode(SDL_TRUE);
 				setupGL();
 				
 				trimMouseModeStack();
