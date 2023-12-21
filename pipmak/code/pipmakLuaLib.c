@@ -296,7 +296,7 @@ static int setwindowedLua(lua_State *L);
 static int internalNewprojectLua(lua_State *L) {
 	char *path;
 	if (screen->flags & SDL_FULLSCREEN) setwindowedLua(L);
-	SDL_WM_GrabInput(SDL_GRAB_OFF);
+	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
 	path = newProjectPath();
 	SDL_ShowCursor(SDL_DISABLE);
@@ -886,7 +886,7 @@ static int setfullscreenLua(lua_State *L) {
 				screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
 			}
 			setupGL();
-			SDL_WM_GrabInput(SDL_GRAB_ON);
+			SDL_SetRelativeMouseMode(SDL_TRUE);
 			if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
 				mouseX = screen->w/2;
 				mouseY = screen->h/2;
@@ -962,7 +962,7 @@ static int savegameLua(lua_State *L) {
 		cleanupGL();
 		screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
 	}
-	SDL_WM_GrabInput(SDL_GRAB_OFF);
+	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
 	p = saveGamePath();
 	if (p != NULL) {
@@ -1057,7 +1057,7 @@ static int savegameLua(lua_State *L) {
 	popMouseMode(token);
 	if (videoflags & SDL_FULLSCREEN) {
 		screen = SDL_SetVideoMode(w, h, 0, videoflags);
-		SDL_WM_GrabInput(SDL_GRAB_ON);
+		SDL_SetRelativeMouseMode(SDL_TRUE);
 		setupGL();
 	}
 	return 0;

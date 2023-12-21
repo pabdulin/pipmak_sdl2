@@ -532,7 +532,7 @@ int main(int argc, char *argv[]) {
 			case INSTR_OPENSAVEDGAME: {
 				/*Lua function has already switched to windowed*/
 				// TODO(pabdulin): fix#3, see: https://wiki.libsdl.org/SDL2/MigrationGuide#input
-				SDL_WM_GrabInput(SDL_GRAB_OFF);
+				SDL_SetRelativeMouseMode(SDL_FALSE);
 				SDL_ShowCursor(SDL_ENABLE);
 				p = openSavedGamePath();
 				SDL_ShowCursor(SDL_DISABLE);
@@ -544,7 +544,7 @@ int main(int argc, char *argv[]) {
 			case INSTR_OPENPROJECT: {
 				if (disruptiveInstructionArgumentCharP == NULL) {
 					/*Lua function has already switched to windowed*/
-					SDL_WM_GrabInput(SDL_GRAB_OFF);
+					SDL_SetRelativeMouseMode(SDL_FALSE);
 					SDL_ShowCursor(SDL_ENABLE);
 					p = openProjectPath();
 					SDL_ShowCursor(SDL_DISABLE);
@@ -625,15 +625,15 @@ int main(int argc, char *argv[]) {
 						if ((mouseX == 0 && event.motion.xrel < 0) || (mouseX == screen->w-1 && event.motion.xrel > 0)
 							|| (mouseY == 0 && event.motion.yrel < 0) || (mouseY == screen->h-1 && event.motion.yrel > 0)
 						) {
-							SDL_WM_GrabInput(SDL_GRAB_OFF);
+							SDL_SetRelativeMouseMode(SDL_FALSE);
 							SDL_WarpMouse(mouseX, mouseY);
 						}
 						/*regrab, with a slightly inset boundary to allow resizing of the window (at least on Mac OS X, the resizing handle is inside the window and thus can't be used while grabbed)*/
-						else if (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_OFF
+						else if (SDL_GetRelativeMouseMode() == SDL_FALSE
 							&& mouseX > 5 && mouseX < screen->w-6
 							&& mouseY > 5 && mouseY < screen->h-6
 						) {
-							SDL_WM_GrabInput(SDL_GRAB_ON);
+							SDL_SetRelativeMouseMode(SDL_TRUE);
 						}
 					}
 					break;
@@ -666,7 +666,7 @@ int main(int argc, char *argv[]) {
 				// ?? case SDL_WINDOWEVENT_FOCUS_GAINED:
 				case SDL_WINDOWEVENT_FOCUS_LOST:
 					// if (event.active.gain == 0 && (event.active.state & (SDL_APPINPUTFOCUS | SDL_APPACTIVE)) && !(screen_flags & SDL_WINDOW_FULLSCREEN)) {
-					SDL_WM_GrabInput(SDL_GRAB_OFF);
+					SDL_SetRelativeMouseMode(SDL_FALSE);
 					// }
 					break;
 				// TODO(pabdulin): fix#4, see: https://wiki.libsdl.org/SDL2/MigrationGuide#summary-of-some-renamed-or-replaced-things

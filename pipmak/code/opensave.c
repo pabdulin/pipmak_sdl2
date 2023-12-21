@@ -328,7 +328,7 @@ int openSavedGame(const char *filename) {
 					screen = SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE);
 					terminalPrintf("Error switching to full screen: %s", SDL_GetError());
 				}
-				if (screen->flags & SDL_FULLSCREEN) SDL_WM_GrabInput(SDL_GRAB_ON);
+				if (screen->flags & SDL_FULLSCREEN) SDL_SetRelativeMouseMode(SDL_TRUE);
 				setupGL();
 				
 				trimMouseModeStack();
