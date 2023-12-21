@@ -61,7 +61,8 @@ extern enum TransitionDirection currentTransitionDirection;
 extern Uint32 transitionDuration;
 extern float transitionParameter;
 extern struct MouseModeStackEntry *topMouseMode;
-extern SDL_Surface *screen;
+extern SDL_Rect screenSize;
+extern SDL_Window *sdl2Window;
 extern GLint glTextureFilter;
 extern GLenum glTextureTarget;
 extern int showControls;
@@ -295,7 +296,10 @@ static int internalSpecialcursorLua(lua_State *L) {
 static int setwindowedLua(lua_State *L);
 static int internalNewprojectLua(lua_State *L) {
 	char *path;
-	if (screen->flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
+
+	// TODO(pabdulin): check
+	Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
+	if (screen_flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
 	path = newProjectPath();
@@ -770,6 +774,7 @@ static int getviewdirectionLua(lua_State *L) {
 }
 
 static int screensizeLua(lua_State *L) {
+	SDL_Rect *screen = &screenSize;
 	lua_pushnumber(L, screen->w);
 	lua_pushnumber(L, screen->h);
 	return 2;
@@ -778,7 +783,15 @@ static int screensizeLua(lua_State *L) {
 static int setwindowedLua(lua_State *L) {
 	terminalClear();
 	cleanupGL();
-	screen = SDL_CreateWindow(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	
+	
+	sdl2Window = SDL_CreateWindow("pipmak",
+	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	640, 480,
+	SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
+	SDL_Rect *screen = &screenSize;
+	
 	setupGL();
 	if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
 		mouseX = screen->w/2;
@@ -792,7 +805,8 @@ static int getscreenmodesLua(lua_State *L) {
 	SDL_Rect **modes;
 	int i;
 
-	modes = 0 = 0; SDL_ListModes(NULL, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+	// TODO(pabdulin): fix#8 SDL_ListModes
+	modes = NULL; // 0 = 0; SDL_ListModes(NULL, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (modes == NULL || modes == (SDL_Rect**)-1) {
 		/*return an empty table*/
 		lua_newtable(L);
@@ -827,7 +841,8 @@ static int setfullscreenLua(lua_State *L) {
 	SDL_Rect **modes;
 	int i;
 
-	modes = 0 = 0; SDL_ListModes(NULL, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+	// TODO(pabdulin): fix#8 SDL_ListModes
+	modes = NULL; // 0 = 0; SDL_ListModes(NULL, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 	if (modes == NULL) {
 		terminalPrint("Error switching to full screen: No video modes available", 0);
 	}
@@ -843,6 +858,7 @@ static int setfullscreenLua(lua_State *L) {
 		}
 		i = 0;
 
+		SDL_Rect *screen = &screenSize;
 		if (lua_gettop(L) < 2 && !lua_istable(L, 1)) {  /* old syntax: parameter, if present, is boolean */ 
 			if (lua_toboolean(L, 1)) {
 				while (modes[i+1] != NULL && modes[i]->w * modes[i]->h >= screen->w * screen->h) i++;
@@ -877,13 +893,24 @@ static int setfullscreenLua(lua_State *L) {
 			if (modeFound == 0) i--;
 		}
 
-		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen->flags & SDL_WINDOW_FULLSCREEN) == 0) {
+		// TODO(pabdulin): check
+		Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
+		SDL_Rect *screen = &screenSize;
+		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen_flags & SDL_WINDOW_FULLSCREEN) == 0) {
 			terminalClear();
 			cleanupGL();
-			screen = SDL_CreateWindow(modes[i]->w, modes[i]->h, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
-			if (screen == NULL) {
+			sdl2Window = SDL_CreateWindow("pipmak",
+				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+				modes[i]->w, modes[i]->h, 
+				SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+			SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
+			if (sdl2Window == NULL) {
 				terminalPrintf("Error switching to full screen: %s", SDL_GetError());
-				screen = SDL_CreateWindow(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+				sdl2Window = SDL_CreateWindow("pipmak",
+					SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+					640, 480, 
+					SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+				SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 			}
 			setupGL();
 			SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -954,13 +981,21 @@ static int savegameLua(lua_State *L) {
 	Uint32 videoflags;
 	CNode *node;
 	MouseModeToken token = pushMouseMode(MOUSE_MODE_JOYSTICK);
+	SDL_Rect *screen = &screenSize;
 	w = screen->w;
 	h = screen->h;
-	videoflags = screen->flags;
+
+	// TODO(pabdulin): check
+	Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
+	videoflags = screen_flags;
 	if (videoflags & SDL_WINDOW_FULLSCREEN) {
 		terminalClear();
 		cleanupGL();
-		screen = SDL_CreateWindow(640, 480, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+		sdl2Window = SDL_CreateWindow("pipmak",
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			640, 480, 
+			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+		SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 	}
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
@@ -1056,7 +1091,11 @@ static int savegameLua(lua_State *L) {
 	SDL_ShowCursor(SDL_DISABLE);
 	popMouseMode(token);
 	if (videoflags & SDL_WINDOW_FULLSCREEN) {
-		screen = SDL_CreateWindow(w, h, 0, videoflags);
+		sdl2Window = SDL_CreateWindow("pipmak",
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			w, h,
+			videoflags);
+		SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 		setupGL();
 	}
@@ -1064,13 +1103,17 @@ static int savegameLua(lua_State *L) {
 }
 
 static int opensavedgameLua(lua_State *L) {
-	if (screen->flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
+	// TODO(pabdulin): check
+	Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
+	if (screen_flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
 	disruptiveInstruction = INSTR_OPENSAVEDGAME;
 	return 0;
 }
 
 static int openprojectLua(lua_State *L) {
-	if (screen->flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
+	// TODO(pabdulin): check
+	Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
+	if (screen_flags & SDL_WINDOW_FULLSCREEN) setwindowedLua(L);
 	disruptiveInstruction = INSTR_OPENPROJECT;
 	return 0;
 }

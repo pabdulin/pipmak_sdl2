@@ -63,7 +63,7 @@ CNode *touchedNode;
 GLfloat azimuth, elevation, minaz, maxaz, minel, maxel;
 GLfloat verticalFOV;
 // SDL_Surface *screen;
-SDL_Rect *screen;
+SDL_Rect screenSize;
 SDL_Window *sdl2Window;
 CNode *backgroundCNode, *frontCNode, *thisCNode = NULL;
 lua_State *L = NULL;
@@ -95,7 +95,8 @@ int cpTermToStdout = 0;
 void redrawGL(float fade) {
 	CNode *node;
 	Uint32 ticks = SDL_GetTicks();
-	
+	SDL_Rect *screen = &screenSize;
+
 	if (fade < 1) {
 		float f, g, s;
 		if (glTextureTarget == GL_TEXTURE_RECTANGLE_NV) {
@@ -430,10 +431,7 @@ int main(int argc, char *argv[]) {
 		quit(1);
 	}
 	// TODO(pabdulin): fix#3
-	SDL_Rect screen_;
-	SDL_GetWindowSize(sdl2Window, &screen_.w, &screen_.h);
-	screen = &screen_;
-
+	SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 
 	// followed by 
 	SDL_GL_CreateContext(sdl2Window);
@@ -573,7 +571,7 @@ int main(int argc, char *argv[]) {
 		/*touchedNode may be NULL at this point*/
 		
 		/*Handle mouse motion*/
-		
+		SDL_Rect *screen = &screenSize;
 		if ( !(backgroundCNode->type & 1) /*panoramic*/ && topMouseMode->mode == MOUSE_MODE_DIRECT && backgroundCNode->tool->tag != TOOL_PAN) {
 			SDL_GetRelativeMouseState(&mouseDeltaX, &mouseDeltaY);
 			if (mouseDeltaX > screen->w/2 || mouseDeltaX < -screen->w/2 || mouseDeltaY > screen->h/2 || mouseDeltaY < -screen->h/2) mouseDeltaX = mouseDeltaY = 0; /*ignore large deltas that are caused by lifting a tablet pen*/
