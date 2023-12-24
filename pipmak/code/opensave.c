@@ -48,7 +48,7 @@ extern GLfloat azimuth, elevation;
 extern GLfloat verticalFOV;
 extern float joystickSpeed;
 extern GLint glTextureFilter;
-// extern SDL_Rect *screen;
+extern SDL_Rect screenSize;
 extern SDL_Window *sdl2Window;
 extern Image *standardCursor;
 extern Image *cursors[NUMBER_OF_CURSORS];
@@ -326,17 +326,10 @@ int openSavedGame(const char *filename) {
 				terminalClear();
 				cleanupGL();
 				
-				sdl2Window = SDL_CreateWindow("pipmak",
-					SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-					w, h,
-					videoflags);
-				if (sdl2Window == NULL) {
-					sdl2Window = SDL_CreateWindow("pipmak", 
-						SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-						640, 480,
-						SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-					terminalPrintf("Error switching to full screen: %s", SDL_GetError());
-				}
+				// TODO(pabdulin): check fullscreen saved not supported
+				// need to handle switch to fullscreen separately if necessary
+				SDL_SetWindowSize(sdl2Window, w, h);
+				SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 
 				Uint32 screen_flags = SDL_GetWindowFlags(sdl2Window);
 				if (screen_flags & SDL_WINDOW_FULLSCREEN) SDL_SetRelativeMouseMode(SDL_TRUE);
