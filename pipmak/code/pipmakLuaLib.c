@@ -786,11 +786,7 @@ static int setwindowedLua(lua_State *L) {
 	terminalClear();
 	cleanupGL();
 	
-	
-	sdl2Window = SDL_CreateWindow("pipmak",
-	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-	640, 480,
-	SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	SDL_SetWindowSize(sdl2Window, 640, 480);
 	SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 	SDL_Rect *screen = &screenSize;
 	
@@ -900,19 +896,11 @@ static int setfullscreenLua(lua_State *L) {
 		if (modes[i]->w != screen->w || modes[i]->h != screen->h || (screen_flags & SDL_WINDOW_FULLSCREEN) == 0) {
 			terminalClear();
 			cleanupGL();
-			sdl2Window = SDL_CreateWindow("pipmak",
-				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-				modes[i]->w, modes[i]->h, 
-				SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+			
+			// TODO(pabdulin): check fullscreen saved not supported
+			SDL_SetWindowSize(sdl2Window, modes[i]->w, modes[i]->h);
 			SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
-			if (sdl2Window == NULL) {
-				terminalPrintf("Error switching to full screen: %s", SDL_GetError());
-				sdl2Window = SDL_CreateWindow("pipmak",
-					SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-					640, 480, 
-					SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-				SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
-			}
+			
 			setupGL();
 			SDL_SetRelativeMouseMode(SDL_TRUE);
 			if (topMouseMode->mode == MOUSE_MODE_DIRECT) {
@@ -992,10 +980,8 @@ static int savegameLua(lua_State *L) {
 	if (videoflags & SDL_WINDOW_FULLSCREEN) {
 		terminalClear();
 		cleanupGL();
-		sdl2Window = SDL_CreateWindow("pipmak",
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			640, 480, 
-			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+		// TODO(pabdulin): check fullscreen saved not supported
+		SDL_SetWindowSize(sdl2Window, 640, 480);
 		SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 	}
 	SDL_SetRelativeMouseMode(SDL_FALSE);
@@ -1092,10 +1078,8 @@ static int savegameLua(lua_State *L) {
 	SDL_ShowCursor(SDL_DISABLE);
 	popMouseMode(token);
 	if (videoflags & SDL_WINDOW_FULLSCREEN) {
-		sdl2Window = SDL_CreateWindow("pipmak",
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			w, h,
-			videoflags);
+		// TODO(pabdulin): check fullscreen saved not supported
+		SDL_SetWindowSize(sdl2Window, w, h);
 		SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 		setupGL();
