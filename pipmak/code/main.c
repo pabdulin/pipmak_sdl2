@@ -668,33 +668,40 @@ int main(int argc, char *argv[]) {
 					// }
 					break;
 				// TODO(pabdulin): fix#4, see: https://wiki.libsdl.org/SDL2/MigrationGuide#summary-of-some-renamed-or-replaced-things
-				case SDL_WINDOWEVENT_RESIZED:
-					// SDL_Log("Window %d resized to %dx%d",
-					// 		event->window.windowID,
-					// 		event->window.data1,
-					// 		event->window.data2);
-					terminalClear();
-					cleanupGL();
-					
-					// TODO(pabdulin): note duplicate code for window creation
-					// screen = SDL_SetVideoMode(event.window.data1, event.window.data2, 0, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-					sdl2Window = SDL_CreateWindow(
-						"pipmak SDL2", 
-						SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-						event.window.data1, event.window.data2,
-						SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-					if (sdl2Window == NULL) {
-						errorMessage("Could not resize window: %s", SDL_GetError());
-						quit(1);
-					}
-					// TODO(pabdulin): fix#3
-					SDL_Rect screen_;
-					SDL_GetWindowSize(sdl2Window, &screen_.w, &screen_.h);
-					screen = &screen_;
+				case SDL_WINDOWEVENT:
+				{
+					// TODO(pabdulin): handle windowID?
+					//if (event.window.windowID == windowID)  
+					{
+						switch (event.window.event)  {
 
-					setupGL();
-					terminalPrintf("%d x %d\n", screen->w, screen->h);
-					break;
+							case SDL_WINDOWEVENT_RESIZED:
+								// SDL_Log("Window %d resized to %dx%d",
+								// 		event->window.windowID,
+								// 		event->window.data1,
+								// 		event->window.data2);
+								terminalClear();
+								cleanupGL();
+								
+								SDL_SetWindowSize(sdl2Window, event.window.data1, event.window.data2);
+								// TODO(pabdulin): fix#3
+								SDL_GetWindowSize(sdl2Window, &screenSize.w, &screenSize.h);
+
+								setupGL();
+								terminalPrintf("%d x %d\n", screen->w, screen->h);
+								break;
+
+							case SDL_WINDOWEVENT_CLOSE:  {
+								event.type = SDL_QUIT;
+								SDL_PushEvent(&event);
+								break;
+							}
+
+						}
+					}
+				}
+				break;
+
 				case SDL_QUIT:
 					quit(0);
 					break;
