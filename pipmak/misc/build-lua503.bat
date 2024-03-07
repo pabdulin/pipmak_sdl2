@@ -1,6 +1,7 @@
 SET DirName=%1
 SET ObjName=%2
 SET BuildDir=..\..\build\%ObjName%
+SET LibDir=..\..\lib
 SET SrcDir=..\..\pipmak\code_ext\%DirName%\src
 
 @ECHO ========== Building '%SrcDir%' to '%BuildDir%' ==========
@@ -23,4 +24,7 @@ IF EXIST %BuildDir% RD %BuildDir% /q /s
 IF NOT EXIST %BuildDir% MKDIR %BuildDir%
 PUSHD %BuildDir%
   cl.exe %compiler_flags% /link %linker_flags%
+  COPY /Y lua*.lib %LibDir%
+  @REM COPY /Y lua*.pdb %BuildDir%
+  @REM COPY /Y lua*.dll %BuildDir%
 POPD
