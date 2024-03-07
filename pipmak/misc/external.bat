@@ -18,6 +18,9 @@ PUSHD ..\..
         CALL ..\misc\build-libogg-1.3.5.bat libogg-1.3.5 libogg
         CALL ..\misc\build-libvorbis-1.3.7.bat libvorbis-1.3.7 libvorbis
         CALL ..\misc\build-SDL2-2.28.5.bat SDL2-2.28.5 SDL2
+        MKLINK /D /J SDL SDL2-2.28.5
+        CALL ..\misc\build-SDL2_image-2.8.1.bat SDL2_image-2.8.1 SDL2_image
+        RMDIR SDL
     POPD 
 
     @REM     IF NOT EXIST SDL-1.2 (
