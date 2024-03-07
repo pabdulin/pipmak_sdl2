@@ -17,6 +17,6 @@ PUSHD %BuildDir%
   COPY /Y %SrcDir%\x64\Release\sdl*.lib %LibDir%
   COPY /Y %SrcDir%\x64\Release\sdl*.pdb %BuildDir%
   COPY /Y %SrcDir%\x64\Release\sdl*.dll %BuildDir%
-  COPY /Y %SrcDir%\x64\Release\sdl*.pdb ..
-  COPY /Y %SrcDir%\x64\Release\sdl*.dll ..
+  @REM COPY /Y %SrcDir%\x64\Release\sdl*.pdb ..\pipmak
+  @REM COPY /Y %SrcDir%\x64\Release\sdl*.dll ..\pipmak
 POPD

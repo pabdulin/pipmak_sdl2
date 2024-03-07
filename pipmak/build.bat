@@ -1,21 +1,24 @@
 @ECHO OFF
 ECHO CWD=%cd%
 
+SET BuildDir=..\build\pipmak
+SET RelDir=..\..
+
 CALL "misc\vsShell64.bat"
 
 SET LibsSDL2=SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib
 SET LibsSDL=%LibsSDL2%
 SET LibsXiph=libogg.lib libvorbis_static.lib libvorbisfile_static.lib
 SET LibsWin=Shell32.lib User32.lib Advapi32.lib Comdlg32.lib OpenGL32.Lib GlU32.Lib
-SET LinkerPaths=/LIBPATH:..\lib
+SET LinkerPaths=/LIBPATH:%RelDir%\lib
 SET LinkerFiles=legacy_stdio_definitions.lib lua503.lib %LibsSDL% OpenAL32.lib %LibsXiph% %LibsWin%
 
 SET CompilerWarns=
 SET CompilerDefines=/D"DEBUG" /D"WIN32"
-SET IncludeSDL2=/I..\include\SDL2 /I..\include\SDL2_image /I..\include\SDL2_ttf
+SET IncludeSDL2=/I%RelDir%\include\SDL2 /I%RelDir%\include\SDL2_image /I%RelDir%\include\SDL2_ttf
 SET IncludeSDL=%IncludeSDL2%
-SET CompilerIncludePaths=/I..\include %IncludeSDL% /I..\include\AL /I..\include\lua503 /I..\include\physfs\src /I..\include\physfs\extras
-SET CompilerFiles="..\pipmak\code\*.c" "..\pipmak\code\physfs\src\*.c" "..\pipmak\code\physfs\extras\*.c" "..\pipmak\code\gl3w\*.c"
+SET CompilerIncludePaths=/I%RelDir%\include %IncludeSDL% /I%RelDir%\include\AL /I%RelDir%\include\lua503 /I%RelDir%\include\physfs\src /I%RelDir%\include\physfs\extras
+SET CompilerFiles="%RelDir%\pipmak\code\*.c" "%RelDir%\pipmak\code\physfs\src\*.c" "%RelDir%\pipmak\code\physfs\extras\*.c" "%RelDir%\pipmak\code\gl3w\*.c"
 
 REM /Fe - Name EXE File, see: https://learn.microsoft.com/en-us/cpp/build/reference/fe-name-exe-file?view=msvc-170
 REM /MD, /MT, /LD - Use Run-Time Library, see: https://learn.microsoft.com/en-us/cpp/build/reference/md-mt-ld-use-run-time-library?view=msvc-170
@@ -29,8 +32,8 @@ REM /LTCG - Link-time code generation, see: https://learn.microsoft.com/en-us/cp
 REM /SUBSYSTEM - Specify Subsystem, see: https://learn.microsoft.com/en-us/cpp/build/reference/subsystem-specify-subsystem?view=msvc-170
 SET LinkerFlags=/link /LTCG:OFF /SUBSYSTEM:CONSOLE %LinkerPaths% %LinkerFiles%
 
-IF NOT EXIST ..\build (MKDIR ..\build)
-PUSHD ..\build
+IF NOT EXIST %BuildDir% (MKDIR %BuildDir%)
+PUSHD %BuildDir%
     cl.exe %CompilerFlags% %LinkerFlags%
     DEL *.obj
 POPD
