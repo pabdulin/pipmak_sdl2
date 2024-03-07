@@ -25,6 +25,6 @@ IF NOT EXIST %BuildDir% MKDIR %BuildDir%
 PUSHD %BuildDir%
   cl.exe %compiler_flags% /link %linker_flags%
   COPY /Y lua*.lib %LibDir%
-  @REM COPY /Y lua*.pdb %BuildDir%
-  @REM COPY /Y lua*.dll %BuildDir%
+  COPY /Y lua*.pdb ..
+  COPY /Y lua*.dll ..
 POPD
