@@ -15,4 +15,4 @@
    6. ✅ SDL2.lib
    7. ✅ SDL2main.lib
    8. ✅ SDL2_image.lib
-   9. SDL2_ttf.lib
+   9. ✅ SDL2_ttf.lib

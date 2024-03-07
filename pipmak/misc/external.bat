@@ -20,6 +20,7 @@ PUSHD ..\..
         CALL ..\misc\build-SDL2-2.28.5.bat SDL2-2.28.5 SDL2
         MKLINK /D /J SDL SDL2-2.28.5
         CALL ..\misc\build-SDL2_image-2.8.1.bat SDL2_image-2.8.1 SDL2_image
+        CALL ..\misc\build-SDL2_ttf-2.20.2.bat SDL2_ttf-2.20.2 SDL2_ttf
         RMDIR SDL
     POPD 
 
