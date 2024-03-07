@@ -4,51 +4,55 @@ SET GitCloneCmd=git.exe clone --recurse-submodules -j 8
 SET MsbuildCmd=msbuild.exe
 SET DevenvCmd=devenv.exe
 
-CALL ensureShell64.bat
+CALL vsShell64.bat
 
 PUSHD ..\..
-    IF NOT EXIST external (MKDIR external)
+    @REM IF NOT EXIST external (MKDIR external)
     IF NOT EXIST build (MKDIR build)
     IF NOT EXIST lib (MKDIR lib)
     IF NOT EXIST include (MKDIR include)
 
-    PUSHD external
+    PUSHD pipmak\code_ext
         ECHO CWD=%cd%
-        IF NOT EXIST SDL-1.2 (
-            %GitCloneCmd% https://github.com/libsdl-org/SDL-1.2.git
-            IF NOT EXIST "SDL-1.2\include\SDL_config.h" (
-                MOVE "SDL-1.2\include\SDL_config.h.default" "SDL-1.2\include\SDL_config.h"
-            )
-        )
+        CALL ..\misc\build-lua503.bat lua-5.0.3 lua503
+        @REM PUSHD pipmak\code_ext
+    POPD 
 
-        IF NOT EXIST "SDL-1.2\VisualC\SDL\SDL.vcxproj.upgrade" (
-            %DevenvCmd% "SDL-1.2\VisualC\SDL\SDL.vcxproj" /Upgrade /Out "SDL-1.2\VisualC\SDL\SDL.vcxproj.upgrade"
-        )
-        %MsbuildCmd% "SDL-1.2\VisualC\SDL\SDL.vcxproj" -p:Configuration=Release
+    @REM     IF NOT EXIST SDL-1.2 (
+    @REM         %GitCloneCmd% https://github.com/libsdl-org/SDL-1.2.git
+    @REM         IF NOT EXIST "SDL-1.2\include\SDL_config.h" (
+    @REM             MOVE "SDL-1.2\include\SDL_config.h.default" "SDL-1.2\include\SDL_config.h"
+    @REM         )
+    @REM     )
 
-        IF NOT EXIST "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj.upgrade" (
-            %DevenvCmd% "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj" /Upgrade /Out "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj.upgrade"
-        )
-        %MsbuildCmd% "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj" -p:Configuration=Release
-    POPD
+    @REM     IF NOT EXIST "SDL-1.2\VisualC\SDL\SDL.vcxproj.upgrade" (
+    @REM         %DevenvCmd% "SDL-1.2\VisualC\SDL\SDL.vcxproj" /Upgrade /Out "SDL-1.2\VisualC\SDL\SDL.vcxproj.upgrade"
+    @REM     )
+    @REM     %MsbuildCmd% "SDL-1.2\VisualC\SDL\SDL.vcxproj" -p:Configuration=Release
+
+    @REM     IF NOT EXIST "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj.upgrade" (
+    @REM         %DevenvCmd% "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj" /Upgrade /Out "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj.upgrade"
+    @REM     )
+    @REM     %MsbuildCmd% "SDL-1.2\VisualC\SDLmain\SDLmain.vcxproj" -p:Configuration=Release
+    @REM POPD
     
-    PUSHD build
-        ECHO CWD=%cd%
-        COPY ..\external\SDL-1.2\VisualC\SDL\x64\Release\SDL.dll
-        COPY ..\external\SDL-1.2\VisualC\SDL\x64\Release\SDL.pdb
-        COPY ..\external\SDL-1.2\VisualC\SDLmain\x64\Release\SDLmain.pdb
-    POPD
+    @REM PUSHD build
+    @REM     ECHO CWD=%cd%
+    @REM     COPY ..\external\SDL-1.2\VisualC\SDL\x64\Release\SDL.dll
+    @REM     COPY ..\external\SDL-1.2\VisualC\SDL\x64\Release\SDL.pdb
+    @REM     COPY ..\external\SDL-1.2\VisualC\SDLmain\x64\Release\SDLmain.pdb
+    @REM POPD
     
-    PUSHD lib
-        ECHO CWD=%cd%
-        IF NOT EXIST SDL (MKDIR SDL)
-        COPY ..\external\SDL-1.2\VisualC\SDL\x64\Release\SDL.lib
-        COPY ..\external\SDL-1.2\VisualC\SDLmain\x64\Release\SDLmain.lib
-    POPD
+    @REM PUSHD lib
+    @REM     ECHO CWD=%cd%
+    @REM     IF NOT EXIST SDL (MKDIR SDL)
+    @REM     COPY ..\external\SDL-1.2\VisualC\SDL\x64\Release\SDL.lib
+    @REM     COPY ..\external\SDL-1.2\VisualC\SDLmain\x64\Release\SDLmain.lib
+    @REM POPD
     
-    PUSHD include
-        ECHO CWD=%cd%
-        IF NOT EXIST SDL (MKDIR SDL)
-        COPY ..\external\SDL-1.2\include SDL
-    POPD
+    @REM PUSHD include
+    @REM     ECHO CWD=%cd%
+    @REM     IF NOT EXIST SDL (MKDIR SDL)
+    @REM     COPY ..\external\SDL-1.2\include SDL
+    @REM POPD
 POPD
