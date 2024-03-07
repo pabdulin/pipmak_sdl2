@@ -6,7 +6,7 @@ CALL "misc\vsShell64.bat"
 SET LibsSDL1=SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib
 SET LibsSDL2=SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib
 SET LibsSDL=%LibsSDL2%
-SET LibsXiph=libogg.lib libvorbis.lib libvorbisfile.lib
+SET LibsXiph=libogg.lib libvorbis_static.lib libvorbisfile_static.lib
 SET LibsWin=Shell32.lib User32.lib Advapi32.lib Comdlg32.lib OpenGL32.Lib GlU32.Lib
 SET LinkerPaths=/LIBPATH:..\lib
 SET LinkerFiles=legacy_stdio_definitions.lib lua503.lib %LibsSDL% OpenAL32.lib %LibsXiph% %LibsWin%

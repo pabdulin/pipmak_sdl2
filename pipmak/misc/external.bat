@@ -1,5 +1,5 @@
 @ECHO OFF
-ECHO CWD=%cd%
+ECHO CWD==%cd%
 SET GitCloneCmd=git.exe clone --recurse-submodules -j 8
 SET MsbuildCmd=msbuild.exe
 SET DevenvCmd=devenv.exe
@@ -13,10 +13,10 @@ PUSHD ..\..
     IF NOT EXIST include (MKDIR include)
 
     PUSHD pipmak\code_ext
-        ECHO CWD=%cd%
+        ECHO CWD==%cd%
         CALL ..\misc\build-lua503.bat lua-5.0.3 lua503
         CALL ..\misc\build-libogg-1.3.5.bat libogg-1.3.5 libogg
-        @REM PUSHD pipmak\code_ext
+        CALL ..\misc\build-libvorbis-1.3.7.bat libvorbis-1.3.7 libvorbis
     POPD 
 
     @REM     IF NOT EXIST SDL-1.2 (
