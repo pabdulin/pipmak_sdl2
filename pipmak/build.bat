@@ -1,7 +1,7 @@
 @ECHO OFF
 ECHO CWD=%cd%
 
-CALL "misc\ensureShell64.bat"
+CALL "misc\vsShell64.bat"
 
 SET LibsSDL1=SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib
 SET LibsSDL2=SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib
