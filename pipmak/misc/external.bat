@@ -22,7 +22,7 @@ PUSHD ..\..
         CALL ..\misc\build-SDL2_image-2.8.1.bat SDL2_image-2.8.1 SDL2_image
         CALL ..\misc\build-SDL2_ttf-2.20.2.bat SDL2_ttf-2.20.2 SDL2_ttf
         RMDIR SDL
-    POPD 
+    POPD
 
     @REM     IF NOT EXIST SDL-1.2 (
     @REM         %GitCloneCmd% https://github.com/libsdl-org/SDL-1.2.git

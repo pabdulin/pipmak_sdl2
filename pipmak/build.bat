@@ -3,7 +3,6 @@ ECHO CWD=%cd%
 
 CALL "misc\vsShell64.bat"
 
-SET LibsSDL1=SDL.lib SDLmain.lib SDL_image.lib SDL_ttf.lib
 SET LibsSDL2=SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib
 SET LibsSDL=%LibsSDL2%
 SET LibsXiph=libogg.lib libvorbis_static.lib libvorbisfile_static.lib
@@ -13,11 +12,10 @@ SET LinkerFiles=legacy_stdio_definitions.lib lua503.lib %LibsSDL% OpenAL32.lib %
 
 SET CompilerWarns=
 SET CompilerDefines=/D"DEBUG" /D"WIN32"
-SET IncludeSDL1=/I..\include\SDL /I..\include\SDL_image /I..\include\SDL_ttf
 SET IncludeSDL2=/I..\include\SDL2 /I..\include\SDL2_image /I..\include\SDL2_ttf
 SET IncludeSDL=%IncludeSDL2%
-SET CompilerIncludePaths=/I..\include %IncludeSDL% /I..\include\AL /I..\include\lua503 /I..\include\physfs
-SET CompilerFiles="..\pipmak\code\*.c" "..\pipmak\code\physfs\*.c" "..\pipmak\code\gl3w\*.c"
+SET CompilerIncludePaths=/I..\include %IncludeSDL% /I..\include\AL /I..\include\lua503 /I..\include\physfs\src /I..\include\physfs\extras
+SET CompilerFiles="..\pipmak\code\*.c" "..\pipmak\code\physfs\src\*.c" "..\pipmak\code\physfs\extras\*.c" "..\pipmak\code\gl3w\*.c"
 
 REM /Fe - Name EXE File, see: https://learn.microsoft.com/en-us/cpp/build/reference/fe-name-exe-file?view=msvc-170
 REM /MD, /MT, /LD - Use Run-Time Library, see: https://learn.microsoft.com/en-us/cpp/build/reference/md-mt-ld-use-run-time-library?view=msvc-170
