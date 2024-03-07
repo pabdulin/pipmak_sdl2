@@ -17,6 +17,7 @@ PUSHD ..\..
         CALL ..\misc\build-lua503.bat lua-5.0.3 lua503
         CALL ..\misc\build-libogg-1.3.5.bat libogg-1.3.5 libogg
         CALL ..\misc\build-libvorbis-1.3.7.bat libvorbis-1.3.7 libvorbis
+        CALL ..\misc\build-SDL2-2.28.5.bat SDL2-2.28.5 SDL2
     POPD 
 
     @REM     IF NOT EXIST SDL-1.2 (

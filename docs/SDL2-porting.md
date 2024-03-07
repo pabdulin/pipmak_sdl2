@@ -12,7 +12,7 @@
    3. ✅ libvorbisfile.lib
    4. ✅ lua503.lib
    5. ✅ OpenAL32.lib (comes with SDK)
-   6. SDL2.lib
-   7. SDL2main.lib
+   6. ✅ SDL2.lib
+   7. ✅ SDL2main.lib
    8. SDL2_image.lib
    9. SDL2_ttf.lib
