@@ -15,6 +15,7 @@ PUSHD ..\..
     PUSHD pipmak\code_ext
         ECHO CWD=%cd%
         CALL ..\misc\build-lua503.bat lua-5.0.3 lua503
+        CALL ..\misc\build-libogg-1.3.5.bat libogg-1.3.5 libogg
         @REM PUSHD pipmak\code_ext
     POPD 
 
