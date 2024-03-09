@@ -16,6 +16,6 @@ PUSHD %BuildDir%
   COPY /Y %SrcDir%\x64\Release\sdl*ttf.lib %LibDir%
   COPY /Y %SrcDir%\x64\Release\sdl*ttf.pdb %BuildDir%
   COPY /Y %SrcDir%\x64\Release\sdl*ttf.dll %BuildDir%
-  @REM COPY /Y %SrcDir%\x64\Release\sdl*ttf.pdb ..\pipmak
-  @REM COPY /Y %SrcDir%\x64\Release\sdl*ttf.dll ..\pipmak
+  COPY /Y %SrcDir%\x64\Release\sdl*ttf.pdb ..\pipmak
+  COPY /Y %SrcDir%\x64\Release\sdl*ttf.dll ..\pipmak
 POPD

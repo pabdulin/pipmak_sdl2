@@ -12,10 +12,11 @@ IF EXIST %BuildDir% RD %BuildDir% /q /s
 @REM compile
 IF NOT EXIST %BuildDir% MKDIR %BuildDir%
 PUSHD %BuildDir%
-  msbuild %SrcDir%\SDL_image.sln -target:SDL2_image -p:Configuration=Release -p:Platform=x64 -p:PlatformToolset=v143
+  msbuild %SrcDir%\SDL.sln -target:SDL2 -p:Configuration=Release -p:Platform=x64 -p:PlatformToolset=v143
+  msbuild %SrcDir%\SDL.sln -target:SDL2main -p:Configuration=Release -p:Platform=x64 -p:PlatformToolset=v143
   COPY /Y %SrcDir%\x64\Release\sdl*.lib %LibDir%
   COPY /Y %SrcDir%\x64\Release\sdl*.pdb %BuildDir%
   COPY /Y %SrcDir%\x64\Release\sdl*.dll %BuildDir%
-  @REM COPY /Y %SrcDir%\x64\Release\sdl*.pdb ..\pipmak
-  @REM COPY /Y %SrcDir%\x64\Release\sdl*.dll ..\pipmak
+  COPY /Y %SrcDir%\x64\Release\sdl*.pdb ..\pipmak
+  COPY /Y %SrcDir%\x64\Release\sdl*.dll ..\pipmak
 POPD
