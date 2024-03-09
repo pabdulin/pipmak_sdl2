@@ -36,4 +36,5 @@ IF NOT EXIST %BuildDir% (MKDIR %BuildDir%)
 PUSHD %BuildDir%
     cl.exe %CompilerFlags% %LinkerFlags%
     DEL *.obj
+    IF NOT EXIST pipmak_data (xcopy.exe %RelDir%\pipmak\resources\ pipmak_data\ /E)
 POPD

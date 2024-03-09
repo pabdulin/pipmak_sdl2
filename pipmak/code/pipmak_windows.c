@@ -47,7 +47,9 @@ void initGUI() {
 }
 
 int prependResourcesToPhysfsSearchpath() {
-	return PHYSFS_addToSearchPath("Pipmak Resources", 0);
+	if (PHYSFS_addToSearchPath("pipmak_data", 0)) return 1;
+	if (PHYSFS_addToSearchPath("Pipmak Resources", 0)) return 1;
+	return 0;
 }
 
 void FlushMessageQueue() {
