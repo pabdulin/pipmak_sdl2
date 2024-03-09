@@ -2,6 +2,9 @@
 
 This is a "port" of original [Pipmak Game Engine](http://pipmak.sourceforge.net/) to SDL2.
 
+## Documentation
+Here is an [old wiki](https://sourceforge.net/p/pipmak/wiki/Main_Page/).
+
 ## Building
 Currently only Windows build is supported.
 Assuming VS2022 is installed at default location.
