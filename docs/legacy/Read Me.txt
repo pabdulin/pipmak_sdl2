@@ -1,0 +1,57 @@
+
+  Pipmak Read Me
+  ==============
+
+The Pipmak Game Engine
+Version 0.2.7, 2008-05-12
+(c) 2004-2008 Christian Walther <cwalther@gmx.ch>
+http://pipmak.sourceforge.net/
+
+
+Welcome!
+--------
+
+Pipmak is an open-source cross-platform game engine and authoring environment for point-and-click adventure games in the style of the Myst series, including panoramic nodes like in 'Myst III: Exile'.
+
+Pipmak is currently very incomplete (see 'To Do.txt') and most likely contains bugs. This will hopefully change over time (slowly though, probably).
+
+To see Pipmak's current capabilities, download the demo project from http://pipmak.sourceforge.net/. When you start Pipmak, it will automatically open any project that is in the same folder as the application. If no project is found, a menu screen is shown. This menu can also be reached by pressing ESC at any time.
+
+Rendering is done using OpenGL, so it's quite fast on modern graphics hardware, but slower than it could be in software rendering. Another consequence is that the high-resolution panoramas need to be stored in texture memory, so there might be problems if you don't have enough of that.
+
+
+Documentation
+-------------
+
+The included "Reference.pdf" is a nearly complete reference of Pipmak's features now. There is still no tutorial-style introductory documentation (contributions in this area would be very welcome). For now, the recommended way of getting started is examining and modifying the contents of the demo project (ctrl-click and "Show Package Contents" on Mac OS X, other platforms should display it as a folder by default) and the internal nodes (in Pipmak.app/Contents/Resources/ on Mac OS X, in 'Pipmak Resources', which is a ZIP archive, on Windows or Linux).
+
+
+Cross Platform
+--------------
+
+Most development has been done on Mac OS X, but Pipmak is designed from the ground up to be cross-platform. This release includes binaries for Mac OS X, Windows, PPC Linux, and x86 Linux. On other platforms that are supported by SDL, you can try the source code distribution. Currently, there is no difference in features between the platforms.
+
+The Windows and Linux versions have received significantly less testing than the Mac OS X version. In particular, I know zero about Windows programming and am cross-compiling the Windows version on Mac OS X. I hope to eventually get a Windows maintainer for Pipmak who can build and debug Windows binaries, and help me with the few platform-specific functions. Linux maintainers are welcome too.
+
+
+Open Source
+-----------
+
+Since version 0.2.0, Pipmak is an open source project hosted on SourceForge and licensed under the GNU GPL. If your want to compile it on a new platform, find out how it works, fix a bug, or contribute a new feature, you can grab a source release on the download page on http://pipmak.sourceforge.net/. Instructions on getting the most recent source code from Subversion are there as well. If you are interested in Pipmak's development, you are encouraged to join the pipmak-devel mailing list (see "Contact" below).
+
+
+Contact
+-------
+
+The recommended means of getting in contact to Pipmak's developers and fellow Pipmak users is the pipmak-devel and pipmak-users mailing lists/newsgroups. See the mailing lists page on http://pipmak.sourceforge.net/ for information on how to access those.
+Christian Walther, the main developer, can also be reached by e-mail at <cwalther@gmx.ch> (but do post your questions on the mailing lists if they are of general interest).
+
+
+License
+-------
+
+Pipmak Game Engine version 0.2.7
+(c) 2004-2008 Christian Walther
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA

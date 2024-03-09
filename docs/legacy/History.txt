@@ -1,0 +1,121 @@
+
+  Pipmak Version History
+  ======================
+
+
+0.2.7, 2008-05-12
+-----------------
+- Display of text on patches in arbitrary TrueType fonts, and some other manipulations of patch images, are possible using the pipmak.newimage() function and new methods on image objects.
+- Patches can now be rotated and even arbitrarily positioned in 3D.
+- A new Lua command line panel and a Lua table inspector make testing and debugging easier.
+- pipmak.setfullscreen() can now set any supported resolution directly, pipmak.getscreenmodes() lists the available resolutions (Andrea Viarengo).
+- Lua functions 'os.clock', 'os.date', 'os.difftime', 'os.time' are now available.
+- The 'loadlib' Lua function is now available (an example plugin is included in the source distribution).
+- On Windows, project and saved game files are automatically associated with Pipmak (Andrea Viarengo).
+- Lua error messages printed to the terminal now include a call stack backtrace.
+- Various tweaks related to mouse grabbing, particularly on Linux (Aidan Gauland).
+- Mouse clicks are ignored while a transition is running (Aidan Gauland).
+- The rigid margins of panels are now adjustable, and patches on slides and panels can now have such margins too.
+- Handles on panels now also work if they lie outside of the background image rectangle.
+- Added pipmak.mouseisdown() function.
+- The size of a handle can now be changed using the 'move' method.
+- Various small bug fixes.
+
+
+0.2.6, 2006-12-24
+-----------------
+- Added a 'New Project' button in the main menu that creates a skeleton project to build on.
+- Using the E key to open node.lua now also works on Windows and Gnome.
+- Reworked mouse handling makes it easier to reach the edges of the window, e.g. for the inventory, on Windows and X11.
+- Better handling of mouse modes (direct/joystick), including pipmak.pushmousemode() and pipmak.popmousemode() functions as well as a 'mousemode' node property.
+- Demo project: space bar shows and hides the inventory.
+- Arbitrary image sizes for cubic panoramas are now officially supported (they happened to work before).
+- Added a 'location' method to panels.
+- No more extra mouseenter and mouseleave messages to overlays when the background node changes.
+- Added icons for projects and saved games on Windows (Fabrizio Pistonesi) (you still have to make the registry entries that cause them to be used by hand).
+- Various bugs fixed, including a number of crashes.
+
+
+0.2.5, 2006-08-01
+-----------------
+- Pipmak can now play sounds! For the time being, only a single file format, Ogg Vorbis, is supported. See sections 2.11 and 3.9 "Sounds" in the documentation.
+- Transition effects can now be used at arbitrary times, not just for node transitions. See section 3.3 "Transition Effects" in the documentation.
+- Controls can now be enabled or disabled.
+- Multiple enternode/leavenode handlers may now be defined per node.
+- Added a pipmak.getviewdirection() function complementary to pipmak.setviewdirection().
+- Vertical retrace synchronization eliminates tearing and reduces CPU/GPU usage.
+- Mouse smoothing in direct mouse mode.
+- Various small bug fixes.
+- More documentation.
+
+
+0.2.4, 2006-03-29
+-----------------
+- Pipmak can now use arbitrary user-specified images as mouse cursors.
+- Added a lot of new predefined cursors.
+- Some other enhancements and bugfixes in cursor handling, including the possibility to specify a global standard cursor. Read all about the new cursor capabilities in section 3.4 "Mouse Cursors" in the documentation.
+- Various internal changes (see the Subversion log for details).
+
+
+0.2.3, 2006-03-02
+-----------------
+- Added a new type of node: the 'panel', useful for things like inventories, pop-up menus, and floating utility windows.
+- It is now possible to display several nodes simultaneously, on top of each other. The pipmak.gotonode() function has been adapted to work with this new functionality, and new functions pipmak.overlaynode(), pipmak.thisnode(), pipmak.backgroundnode() have been introduced.
+- Node objects with a range of methods represent the visible nodes in Lua, and a messaging system enables communication between them.
+- The aspect-ratio-correction border of slides can now be transparent instead of black.
+- The field of vision in a panorama may now be restricted using a 'limits' statement.
+- Nodes can now have mouseenter and mouseleave handlers.
+- Added a new simplified syntax for navigational hotspots and handles.
+- Added a new 'arrow' cursor.
+- If any errors occur during the loading of a node, Pipmak now stays at the previous node instead of displaying a "default" cubic node with "missing image" faces.
+- Project titles are now enforced to only contain ASCII characters because non-ASCII characters could lead to crashes under some circumstances.
+- Pressing the E key opens the current node's 'node.lua' file in an external editor (Mac OS X only, currently).
+- Pressing the L key brings up a preliminary Lua command line.
+- Displaying controls (C key) now also displays the corners of patches.
+- Keydown handlers now receive the character generated by a key press as a second argument.
+- New functions: pipmak.printinplace(), pipmak.mouseminusclickloc(), pipmak.screensize().
+- Open and save dialogs are now implemented on Linux (GTK).
+- Universal binary on Mac OS X.
+
+
+0.2.2, 2005-12-26
+-----------------
+- Complete internal refactorization to make the code more flexible and easier to maintain. Although these changes are mostly transparent to the user (hence the small version number increment), a lot has changed internally, and new bugs may have been introduced.
+- Pressing the shift key temporarily switches the mouse between direct (fixed cursor, immediate panning) and joystick (free cursor, drag to pan) mode.
+- Dragging with the right mouse button (or the command key on Mac OS X) pressed pans joystick-like (even in direct mode).
+- Multi-button mice now work properly, and direct mouse mode now works better with tablets.
+- Specifying width and height for patches is now optional, the image file's dimensions are used as default values.
+- Added the pipmak.dofile() function to enable factoring out often used Lua code into separate files.
+- Added the pipmak.loadimage() function to preload images for later use wherever image file names have been used before.
+- Lots of small bug fixes.
+- More documentation.
+
+
+0.2.1, 2005-03-26
+-----------------
+- Added timers to implement simple animation or other time-dependent behavior. See section 3.2.4 of the reference documentation, and have a look at the updated demo project (search for 'pipmak.schedule' in the 'node.lua' files).
+- Added onenternode/onleavenode handlers. See section 2.5 of the documentation.
+- Linux version.
+- Update to SDL 1.2.8, SDL_image 1.2.4, SDL_ttf 2.0.7 on Mac OS X and Windows.
+- Various small bug fixes.
+- More documentation.
+
+
+0.2.0, 2004-08-11
+-----------------
+- First open source release.
+- Changes to projects' main.lua: 'title = "blah"' and 'start_node = 17' are replaced by 'title "blah"' and 'startnode (17)'. These changes break backwards compatibility. Sorry for the inconvenience, but now is a better time to correct a design flaw than later. Additionally, initialization should now be done in an 'openproject' handler, not directly in main.lua, and there is a new 'version' directive. See section 2.4 of the reference documentation for more info.
+- Removed the zoom-fade effect when reloading a node.
+- (Hopefully) fixed a bug with saving games in fullscreen mode in Windows.
+- More documentation.
+
+
+0.1.1, 2004-07-19
+-----------------
+- Implemented open and save dialogs on Windows and fixed a bunch of bugs related to opening and saving.
+- Added first fragments of reference documentation.
+
+
+0.1.0, 2004-07-05
+-----------------
+First public preview release.

@@ -1,0 +1,62 @@
+
+  Pipmak To Do List
+  =================
+
+The following is a list of things that remain to be done in Pipmak, roughly sorted from 'essential' to 'nice to have'. I'm planning to do the more essential things myself when I have time (this is a spare time project), but contributions are welcome. Let me know if something is missing!
+
+
+
+Write documentation.
+
+Allow non-ASCII characters in project titles.
+
+Don't give all hotspots precendence over all handles, which makes it impossible to place handles on top of hotspots, but test for both hotspots and handles everywhere and use whichever was defined last in node.lua.
+
+A function to measure the extents of text as image:drawtext would draw it, and the possibility to clip text drawing to a specified rectangle.
+
+Implement the preferences node.
+
+A Lua function to programmatically resize the window.
+
+Mac OS X: Enable the menu bar.
+
+Allow arbitrary orientation of the cube for cubic panoramas, to make it easier to avoid situations where a patch crosses an edge and has to be split into multiple patches.
+
+Make panels resizable.
+
+Improve text editing:
+  o Copy & paste
+  o double-click word selection
+
+In the Lua command line and table inspector, keep track of the expressions that lead to inspector rows so that they can be pasted back into the command line.
+
+Disable interpolation for slide size = window size since it blurs the image on some renderers.
+
+A Lua function to smoothly pan to a specific direction in a panorama.
+
+Link some of the libraries statically on Windows and Linux to avoid the proliferation of DLLs / dependency on system libraries.
+
+Video patches.
+
+More sound file formats.
+
+Cubic hotspot maps.
+
+Make 3D-positioned patches overlap according to their geometrical position rather than their order of definition (render them with depth testing).
+
+Nicer handling of transition effects in connection with the black bars at the edges that occur when the window has a different aspect ratio than a slide.
+
+Multi-CD (or otherwise scattered around the filesystem) projects.
+
+Windows: Investigate whether it's possible to include the 'Pipmak Resources' archive in the executable (like these self-extracting zip files) and still access it through PhysicsFS.
+
+Graphical editing features:
+  o hotspot painting
+  o project map to draw links between nodes
+  o interactive patch placement
+
+Lighting effects: flickering light, sunglare, ...
+
+Rippling water.
+
+Bugs flying around (like in Riven).

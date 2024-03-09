@@ -1,0 +1,103 @@
+
+  Building Pipmak from Source
+  ===========================
+
+The Pipmak source distribution currently includes support for the following build systems:
+
+  o Xcode 2.4-3.1 and 1.5 on Mac OS X
+  o Mingw cross-compilation for Windows on Mac OS X
+  o Standard GCC toolchain on Linux and possibly other Unixes
+
+Contribution of projects/makefiles/scripts/whatever for other compilers and platforms is welcome.
+
+
+Requirements
+------------
+
+Apart from the material contained in the source distribution, you need:
+
+  o SDL          http://www.libsdl.org/download-1.2.php
+  o SDL_image    http://www.libsdl.org/projects/SDL_image/
+  o SDL_ttf      http://www.libsdl.org/projects/SDL_ttf/
+  o OpenAL       http://www.openal.org/downloads.html
+  o libogg       http://www.xiph.org/downloads/
+  o libvorbis    http://www.xiph.org/downloads/
+
+    Source distributions or developer packages from the web pages or from your Linux distribution. OpenAL is included in Mac OS X 10.4 and later. These libraries need to be installed in the usual place (see below).
+
+  o PhysicsFS    http://icculus.org/physfs/
+  o Lua 5.0      http://www.lua.org/
+
+    Source distributions from the web pages. These libraries needn't be installed, just build them as described later on.
+
+The current versions at the time of writing are: SDL 1.2.13, SDL_image 1.2.6, SDL_ttf 2.0.9, PhysicsFS 1.0.1, Lua 5.0.3, OpenAL 1.1, libogg 1.1.3, libvorbis 1.2.0.
+
+
+Xcode on Mac OS X
+-----------------
+
+The Xcode 2/3 project (Pipmak.xcodeproj) in build-xcode should work after you complete the following steps. The Xcode 1.5 project (Pipmak.xcode) is unmaintained and may need some adjustment. You can also use the Makefile in build-xcode, it just invokes Xcode for building.
+
+o Install SDL and companions:
+Install the SDL, SDL_image, and SDL_ttf frameworks to /Library/Frameworks/. Instead of downloading them from www.libsdl.org, you can also extract the frameworks from a binary release of Pipmak (Pipmak.app/Contents/Frameworks/).
+
+o Install OpenAL:
+You can use the OpenAL framework included in Mac OS X 10.4 (/System/Library/Frameworks/OpenAL.framework), download the "OpenAL 1.0 Installer for Mac OS X" from the OpenAL web site, build from CVS (I used the MACOSX_DevelopmentBranch), or extract the framework from a binary release of Pipmak. The former two have the disadvantages that they are PPC-only (at least on PPC Macs) and that their install_name is not relative to @executable_path, meaning that Pipmak will not run unless they are installed in a standard Frameworks folder because it doesn't find the embedded copies.
+Because of these multiple options, the Xcode project expects to find the OpenAL framework you want it to use next to the project in the build-xcode folder. Place the framework or a symlink to it there.
+
+o Install libogg and libvorbis:
+Ogg.framework and Vorbis.framework need to be installed in /Library/Frameworks/. You can download the frameworks as part of the QuickTime Components from http://www.xiph.org/quicktime/, build from the source distributions (which include Xcode projects), or extract the frameworks from a binary release of Pipmak. The first option has the disadvantage that the install_name of the frameworks is not relative to @executable_path, meaning that Pipmak will not run unless they are installed in a standard Frameworks folder because it doesn't find the embedded copies (but you can fix this using install_name_tool).
+
+o Build PhysicsFS:
+To build for your native architecture only, unpack physfs-1.0.1.tar.gz and build it with './configure --disable-shared', 'make'. Then move or symbolically link the physfs-1.0.1 folder to 'build-xcode/physfs'.
+To build universal binaries, configure using './configure --disable-shared --disable-readline --disable-dependency-tracking CFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4 -arch ppc -arch i386"' instead. For some reason the Apple-recommended way (http://developer.apple.com/technotes/tn2005/tn2137.html) of specifying both -isysroot and -Wl,-syslibroot doesn't work (error message from gcc: '/usr/bin/ld: -syslibroot: multiply specified').
+
+o Build Lua:
+To build for your native architecture only, unpack lua-5.0.3.tar.gz and build it with 'make'. Then move or symbolically link the lua-5.0.3 folder to 'build-xcode/lua'.
+To build universal binaries, add "-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4 -arch ppc -arch i386" to MYCFLAGS in the 'config' file before building. You may want to make other changes there while you're at it, such as enabling dynamic loading.
+
+
+Mingw cross-compilation for Windows
+-----------------------------------
+
+The Makefile in build-crossmingw is made for cross-compilation on Mac OS X. It can probably be adapted to work on Linux, maybe even for Mingw/MSYS on Windows. It assumes that there is a Mingw cross compilation toolchain installed in /usr/local/cross-tools as described in http://www.libsdl.org/extras/win32/cross/README.txt . Doing 'make' in build-crossmingw should work after you complete the following steps:
+
+o Install SDL and companions:
+Install SDL, SDL_image, and SDL_ttf in /usr/local/cross-tools/i386-mingw32/. For dynamic linking, you can use the Windows developer packages. To link statically (which the makefile is set up for), you need to install static libraries of zlib, libjpeg, libpng, libtiff, SDL, SDL_image, freetype, SDL_ttf from source. This usually involves running 'cross-configure.sh --prefix=/usr/local/cross-tools/i386-mingw32 --disable-shared', 'cross-make.sh', 'sudo cross-make.sh install'.
+
+o Install OpenAL:
+Download the "OpenAL 1.1 SDK for Windows", extract the relevant files from it (it seems that the only way of doing this is running the installer on a Windows machine), and place them in the following locations:
+  /usr/local/cross-tools/i386-mingw32/bin/OpenAL32.dll
+  /usr/local/cross-tools/i386-mingw32/bin/wrap_oal.dll
+  /usr/local/cross-tools/i386-mingw32/include/al.h
+  /usr/local/cross-tools/i386-mingw32/include/alc.h
+  /usr/local/cross-tools/i386-mingw32/lib/OpenAL32.lib
+
+o Install libogg:
+Unpack the source distribution and build it with 'cross-configure.sh --prefix=/usr/local/cross-tools/i386-mingw32 --disable-shared', 'cross-make.sh', 'sudo cross-make.sh install'. (Assuming that you put the cross-configure.sh and cross-make.sh scripts somewhere in your $PATH when you installed the cross-compiler.)
+
+o Install libvorbis:
+Unpack the source distribution and build it with 'PKG_CONFIG_PATH=/usr/local/cross-tools/i386-mingw32/lib/pkgconfig cross-configure.sh --prefix=/usr/local/cross-tools/i386-mingw32 --disable-shared', 'cross-make.sh', 'sudo cross-make.sh install'. If linking fails because it doesn't find libogg, change the line 'LIBS = ' in lib/Makefile to say 'LIBS = -L/usr/local/cross-tools/i386-mingw32/lib -logg'.
+
+o Build PhysicsFS:
+Unpack physfs-1.0.1.tar.gz and build it with 'cross-configure.sh --disable-shared', 'cross-make.sh'. Move or symbolically link the physfs-1.0.1 folder to 'build-crossmingw/physfs'. If configuration says 'checking if this is mingw... no' (it should say 'yes'), change line 10341 of configure from 'if test x$target_os = xmingw32msvc; then' to 'if test x$target_os = xmingw32; then'.
+
+o Build Lua:
+Unpack lua-5.0.3.tar.gz and build it with 'cross-make.sh'. Move or symbolically link the lua-5.0.3 folder to 'build-crossmingw/lua'.
+
+
+Linux (and possibly other Unixes)
+---------------------------------
+
+Doing 'make' in build-linux should work after you complete the following steps:
+
+o Install libraries:
+Install SDL, SDL_image, SDL_ttf, GTK, OpenAL, libogg, libvorbis, PhysicsFS.  Most distributions offer packages for these. If there are separate development packages, be sure to install these as well. If you can't find any packages, build and install from source, but your distribution should provide GTK, as this is a very commonly used library.
+
+o Build Lua:
+Unpack lua-5.0.3.tar.gz and build it with 'make'.
+Move or symbolically link the Lua directory to build-linux, truncating the version number from the directory name.
+Example:
+ln -s /path/to/lua-5.0.2 build-linux/lua
+OR
+mv /path/to/lua-5.0.2 build-linux/lua
